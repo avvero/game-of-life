@@ -1,5 +1,5 @@
 # Conway's Game Of Life
 
 ```bash
-./gradlew run -PappArgs="['40', '70']"
+./gradlew run -PappArgs="['54', '117']"
 ```

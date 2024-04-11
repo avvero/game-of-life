@@ -8,7 +8,7 @@ public class GameOfLife {
 
     public GameOfLife(int x, int y) {
         this.board = new int[x][y];
-        initializeRandom(board);
+        initializeRandom(board, 0, board.length / 3, 0, board[0].length / 3);
     }
 
     public void next() {
@@ -27,7 +27,7 @@ public class GameOfLife {
                 if (board[i][j] == 1) {
                     if (n < 2) {
                         next[i][j] = 0;
-                    } else if (n < 4) {
+                    } else if (n <= 3) {
                         next[i][j] = 1;
                     } else {
                         next[i][j] = 0;
@@ -91,9 +91,9 @@ public class GameOfLife {
         return board;
     }
 
-    private void initializeRandom(int[][] board) {
-        for (int i = 0; i < board.length; i++) {
-            for (int j = 0; j < board[i].length; j++) {
+    private void initializeRandom(int[][] board, int is, int ie, int js, int je) {
+        for (int i = is; i < ie; i++) {
+            for (int j = js; j < je; j++) {
                 board[i][j] = ThreadLocalRandom.current().nextBoolean() ? 1 : 0;
             }
         }
