@@ -10,20 +10,24 @@ public class Main {
         }
         int x = Integer.parseInt(args[0]);
         int y = Integer.parseInt(args[1]);
-        GameOfLife life = new GameOfLife(x, y);
+        Board board = new BoardBordered(x, y);
+//        Board board = new BoardInfinity(x, y);
+        GameOfLife life = new GameOfLife(board);
+        //
         int sleepTime = 100;
-        display(life);
+        display(board);
         Thread.sleep(sleepTime);
         while (true) {
-            life.next();
-            display(life);
+            life.newCycle();
+            display(board);
             Thread.sleep(sleepTime);
         }
     }
 
-    private static void display(GameOfLife life) {
+    private static void display(Board board) {
+        String payload = toString(board.value());
         clear();
-        System.out.println(toString(life.getBoard()));
+        System.out.println(payload);
     }
 
     public static String toString(int[][] board) {
