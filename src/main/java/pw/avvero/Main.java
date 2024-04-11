@@ -5,20 +5,22 @@ import java.io.IOException;
 public class Main {
     public static void main(String[] args) throws InterruptedException {
         if (args.length < 2) {
-            System.out.println("Usage: java GameOfLife <x> <y>");
-            System.exit(1);
+//            System.out.println("Usage: java GameOfLife <x> <y>");
+//            System.exit(1);
+            args = new String[]{"46", "90"};
         }
         int x = Integer.parseInt(args[0]);
         int y = Integer.parseInt(args[1]);
-        Board board = new BoardBordered(x, y);
-//        Board board = new BoardInfinity(x, y);
-        GameOfLife life = new GameOfLife(board);
         //
+        Board board = new BoardBordered(x, y);
+//        GameOfLife game = new GameOfLife(board);
+        GameOfLifeAndWar game = new GameOfLifeAndWar(board);
+        // Engine
         int sleepTime = 100;
         display(board);
         Thread.sleep(sleepTime);
         while (true) {
-            life.newCycle();
+            game.newCycle();
             display(board);
             Thread.sleep(sleepTime);
         }
@@ -36,7 +38,12 @@ public class Main {
         sb.append("\n");
         for (int i = 0; i < board.length; i++) {
             for (int j = 0; j < board[i].length; j++) {
-                sb.append(board[i][j] == 1 ? " ▦" : "  ");// ■ ◼ ⬛ ■ ▦ ⬛ ⛶ ⬜
+                String c = switch (board[i][j]) { // ■ ◼ ⬛ ■ ▦ ⬛ ⛶ ⬜
+                    case (1) -> " ▦";
+                    case (-1) -> "⛶";
+                    default -> "  ";
+                };
+                sb.append(c);
             }
             sb.append("\n");
         }

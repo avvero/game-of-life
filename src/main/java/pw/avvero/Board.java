@@ -1,5 +1,8 @@
 package pw.avvero;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public abstract class Board {
 
     protected int[][] value;
@@ -18,12 +21,14 @@ public abstract class Board {
 
     abstract boolean exists(int i, int j);
 
-    public int neighbours(int i, int j) {
-        int result = 0;
+    public List<int[]> neighbours(int i, int j) {
+        List<int[]> result = new ArrayList<>();
         for (int x = -1; x < 2; x++) {
             for (int y = -1; y < 2; y++) {
                 if (x == 0 && y == 0) continue;
-                result += exists(i + x, j + y) ? 1 : 0;
+                if (exists(i + x, j + y)) {
+                    result.add(new int[]{i + x, j + y, value[i + x][j + y]});
+                }
             }
         }
         return result;
