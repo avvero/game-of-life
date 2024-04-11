@@ -4,9 +4,13 @@ import java.io.IOException;
 
 public class Main {
     public static void main(String[] args) throws InterruptedException {
-        GameOfLife life = new GameOfLife(40, 70);
-//        GameOfLife life = new GameOfLife(50, 100);
-//        GameOfLife life = new GameOfLife(160, 475);
+        if (args.length < 2) {
+            System.out.println("Usage: java GameOfLife <x> <y>");
+            System.exit(1);
+        }
+        int x = Integer.parseInt(args[0]);
+        int y = Integer.parseInt(args[1]);
+        GameOfLife life = new GameOfLife(x, y);
         int sleepTime = 100;
         display(life);
         Thread.sleep(sleepTime);

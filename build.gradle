@@ -19,6 +19,12 @@ application {
     mainClass = 'pw.avvero.Main'
 }
 
+run {
+    if (project.hasProperty('appArgs')) {
+        args Eval.me(appArgs)
+    }
+}
+
 test {
     useJUnitPlatform()
 }
