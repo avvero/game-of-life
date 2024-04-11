@@ -58,6 +58,21 @@ public class GameOfLife {
         return board[i][j] == 1;
     }
 
+    private boolean existsOnOverlap(int[][] board, int i, int j) {
+        if (i < 0) {
+            i = board.length + i;
+        }
+        if (i == board.length) {
+            i = 0;
+        }
+        if (j < 0) {
+            j = board[i].length + j;
+        }
+        if (j == board[i].length) {
+            j = 0;
+        }
+        return board[i][j] == 1;
+    }
 
     private void initializeV(int[][] board) {
         for (int i = 0; i < board.length; i++) {

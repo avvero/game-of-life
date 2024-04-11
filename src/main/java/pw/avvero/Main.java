@@ -6,17 +6,18 @@ public class Main {
     public static void main(String[] args) throws InterruptedException {
         int x = 50, y = 100;
         GameOfLife life = new GameOfLife(50, 100);
-        clear();
-        System.out.println(toString(life.getBoard()));
+        display(life);
         Thread.sleep(100);
         while (true) {
             life.next();
-            //
-            clear();
-            System.out.println(toString(life.getBoard()));
-            //
+            display(life);
             Thread.sleep(200);
         }
+    }
+
+    private static void display(GameOfLife life) {
+        clear();
+        System.out.println(toString(life.getBoard()));
     }
 
     public static String toString(int[][] board) {
