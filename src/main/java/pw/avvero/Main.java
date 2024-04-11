@@ -4,14 +4,16 @@ import java.io.IOException;
 
 public class Main {
     public static void main(String[] args) throws InterruptedException {
-        int x = 50, y = 100;
-        GameOfLife life = new GameOfLife(50, 100);
+        GameOfLife life = new GameOfLife(40, 70);
+//        GameOfLife life = new GameOfLife(50, 100);
+//        GameOfLife life = new GameOfLife(160, 475);
+        int sleepTime = 100;
         display(life);
-        Thread.sleep(100);
+        Thread.sleep(sleepTime);
         while (true) {
             life.next();
             display(life);
-            Thread.sleep(200);
+            Thread.sleep(sleepTime);
         }
     }
 
@@ -26,7 +28,7 @@ public class Main {
         sb.append("\n");
         for (int i = 0; i < board.length; i++) {
             for (int j = 0; j < board[i].length; j++) {
-                sb.append(board[i][j] == 1 ? " *" : "  ");
+                sb.append(board[i][j] == 1 ? " ▦" : "  ");// ■ ◼ ⬛ ■ ▦ ⬛ ⛶ ⬜
             }
             sb.append("\n");
         }
