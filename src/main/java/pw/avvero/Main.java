@@ -5,6 +5,7 @@ import pw.avvero.board.BoardBordered;
 import pw.avvero.seed.RandomSeed;
 
 import java.io.IOException;
+import java.util.Optional;
 
 public class Main {
     public static void main(String[] args) throws InterruptedException {
@@ -17,12 +18,12 @@ public class Main {
         int y = Integer.parseInt(args[1]);
         //
 //        Board board = new BoardBordered(x, y, new GameOfLife());
-//        new RandomSeed().initialize(board.value(), 0, board.value().length / 3, 0,  board.value()[0].length / 3, 1);
+//        new RandomSeed().initialize(board, 0, board.value().length / 3, 0,  board.value()[0].length / 3, 1);
         //
         Board board = new BoardBordered(x, y, new GameOfWar());
-        new RandomSeed().initialize(board.value(), 0, board.value().length / 3, 0, board.value()[0].length / 3, 1);
+        new RandomSeed().initialize(board, 0, board.value().length / 3, 0, board.value()[0].length / 3, 1);
+        new RandomSeed().initialize(board, board.value().length / 3 * 2, board.value().length, board.value()[0].length / 3 * 2, board.value()[0].length, 3);
 //        new RandomSeed().initialize(board.value(), 0, board.value().length / 3, board.value()[0].length / 3 * 2, board.value()[0].length, 2);
-        new RandomSeed().initialize(board.value(), board.value().length / 3 * 2, board.value().length, board.value()[0].length / 3 * 2, board.value()[0].length, 3);
 //        new RandomSeed().initialize(board.value(), board.value().length / 3 * 2, board.value().length, 0, board.value()[0].length / 3, 4);
         // Engine
         int sleepTime = 100;
@@ -41,13 +42,13 @@ public class Main {
         System.out.println(payload);
     }
 
-    public static String toString(int[][] board) {
+    public static String toString(Board.Cell[][] board) {
         StringBuilder sb = new StringBuilder();
         sb.append("--".repeat(board[0].length));
         sb.append("\n");
         for (int i = 0; i < board.length; i++) {
             for (int j = 0; j < board[i].length; j++) {
-                String c = switch (board[i][j]) { // ■ ◼ ⬛ ■ ▦ ⬛ ⛶ ⬜
+                String c = switch (Optional.ofNullable(board[i][j]).orElse(Board.Cell.VOID).value) { // ■ ◼ ⬛ ■ ▦ ⬛ ⛶ ⬜
                     case (1) -> "\033[31m⬛\033[0m";
                     case (3) -> "\033[34m⬛\033[0m";
                     case (2) -> " *"; // < ! \

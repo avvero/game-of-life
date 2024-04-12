@@ -5,7 +5,7 @@ import pw.avvero.State;
 public class BoardInfinity extends Board {
 
     public BoardInfinity(int x, int y, State state) {
-        super(new int[x][y], state);
+        super(new Cell[x][y], state);
     }
 
     @Override
@@ -22,6 +22,6 @@ public class BoardInfinity extends Board {
         if (j == value[i].length) {
             j = 0;
         }
-        return value[i][j] != 0;
+        return value[i][j] != null;
     }
 }

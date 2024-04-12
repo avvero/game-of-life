@@ -13,12 +13,12 @@ import static java.util.stream.Collectors.groupingBy;
 public class GameOfWar implements State {
 
     @Override
-    public int calculate(int current, List<Board.Cell> neighbours) {
+    public Board.Cell calculate(int i, int j, Board.Cell current, List<Board.Cell> neighbours) {
         Map<Integer, Long> grouped = neighbours.stream().collect(groupingBy(cell -> cell.value, counting()));
         int[] top = top(grouped);
-        if (current != 0) {
-            int team = Math.toIntExact(Optional.ofNullable(grouped.get(current)).orElse(0L));
-            grouped.remove(current);
+        if (current != null) {
+            int team = Math.toIntExact(Optional.ofNullable(grouped.get(current.value)).orElse(0L));
+            grouped.remove(current.value);
             int[] enemy = top(grouped);
             if (enemy == null) {
                return current;
@@ -26,19 +26,19 @@ public class GameOfWar implements State {
                 int enemyValue = enemy[0];
                 int enemySize = enemy[1];
                 if (enemySize * ThreadLocalRandom.current().nextInt(0, 2) - 1 - team * ThreadLocalRandom.current().nextInt(0, 2) > 0) {
-                    return enemyValue;
+                    return new Board.Cell(i, j, enemyValue);
                 } else {
-                    return current;
+                    return new Board.Cell(i, j, current.value);
                 }
             }
         } else {
             if (neighbours.size() >= 3) {
                 if (top[1] >= 2) {
-                    return top[0];
+                    return new Board.Cell(i, j, top[0]);
                 }
             }
         }
-        return 0;
+        return null;
     }
 
     private int[] top(Map<Integer, Long> grouped) {
