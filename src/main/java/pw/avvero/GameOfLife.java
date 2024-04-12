@@ -1,6 +1,6 @@
 package pw.avvero;
 
-import java.util.concurrent.ThreadLocalRandom;
+import pw.avvero.board.Board;
 
 public class GameOfLife {
 
@@ -8,7 +8,6 @@ public class GameOfLife {
 
     public GameOfLife(Board board) {
         this.board = board;
-        initializeRandom(board.value(), 0, board.value().length / 3, 0,  board.value()[0].length / 3, 1);
     }
 
     public void newCycle() {
@@ -22,12 +21,8 @@ public class GameOfLife {
                 int n = board.neighbours(i, j).size();
                 if (board.value()[i][j] != 0) {
                     int v = board.value()[i][j];
-                    if (n < 2) {
-                        next[i][j] = 0;
-                    } else if (n <= 3) {
+                    if (n == 2 || n == 3) {
                         next[i][j] = v;
-                    } else {
-                        next[i][j] = 0;
                     }
                 } else {
                     if (n == 3) {
@@ -37,13 +32,5 @@ public class GameOfLife {
             }
         }
         return next;
-    }
-
-    private void initializeRandom(int[][] board, int is, int ie, int js, int je, int value) {
-        for (int i = is; i < ie; i++) {
-            for (int j = js; j < je; j++) {
-                board[i][j] = ThreadLocalRandom.current().nextBoolean() ? value : 0;
-            }
-        }
     }
 }

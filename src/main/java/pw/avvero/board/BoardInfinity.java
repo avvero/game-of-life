@@ -1,4 +1,4 @@
-package pw.avvero;
+package pw.avvero.board;
 
 public class BoardInfinity extends Board {
 

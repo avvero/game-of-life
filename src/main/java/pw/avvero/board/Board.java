@@ -1,4 +1,4 @@
-package pw.avvero;
+package pw.avvero.board;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +15,7 @@ public abstract class Board {
         return value;
     }
 
-    void update(int[][] value) {
+    public void update(int[][] value) {
         this.value = value;
     }
 

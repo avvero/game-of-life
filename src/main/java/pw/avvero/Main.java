@@ -1,5 +1,10 @@
 package pw.avvero;
 
+import pw.avvero.board.Board;
+import pw.avvero.board.BoardBordered;
+import pw.avvero.seed.RandomSeed;
+import pw.avvero.seed.Seed;
+
 import java.io.IOException;
 
 public class Main {
@@ -13,8 +18,12 @@ public class Main {
         int y = Integer.parseInt(args[1]);
         //
         Board board = new BoardBordered(x, y);
-//        GameOfLife game = new GameOfLife(board);
-        GameOfLifeAndWar game = new GameOfLifeAndWar(board);
+        //
+        Seed seed = new RandomSeed();
+        seed.initialize(board.value(), 0, board.value().length / 3, 0,  board.value()[0].length / 3, 1);
+        GameOfLife game = new GameOfLife(board);
+        //
+//        GameOfLifeAndWar game = new GameOfLifeAndWar(board);
         // Engine
         int sleepTime = 100;
         display(board);
@@ -40,7 +49,7 @@ public class Main {
             for (int j = 0; j < board[i].length; j++) {
                 String c = switch (board[i][j]) { // ■ ◼ ⬛ ■ ▦ ⬛ ⛶ ⬜
                     case (1) -> " ▦";
-                    case (-1) -> "⛶";
+                    case (-1) -> " ⛶";
                     default -> "  ";
                 };
                 sb.append(c);
