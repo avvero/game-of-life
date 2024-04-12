@@ -2,6 +2,7 @@ package pw.avvero;
 
 import pw.avvero.board.Board;
 import pw.avvero.board.BoardBordered;
+import pw.avvero.seed.DirectSeed;
 import pw.avvero.seed.RandomSeed;
 
 import java.io.IOException;
@@ -18,9 +19,11 @@ public class Main {
         int y = Integer.parseInt(args[1]);
         //
 //        Board board = new BoardBordered(x, y, new GameOfLife());
+//        new RandomSeed().initialize(board, 0, board.value().length, 0, board.value()[0].length, 0);
 //        new RandomSeed().initialize(board, 0, board.value().length / 3, 0,  board.value()[0].length / 3, 1);
         //
         Board board = new BoardBordered(x, y, new GameOfWar());
+        new DirectSeed().initialize(board, 0, board.value().length, 0, board.value()[0].length, 0);
         new RandomSeed().initialize(board, 0, board.value().length / 3, 0, board.value()[0].length / 3, 1);
         new RandomSeed().initialize(board, board.value().length / 3 * 2, board.value().length, board.value()[0].length / 3 * 2, board.value()[0].length, 3);
 //        new RandomSeed().initialize(board.value(), 0, board.value().length / 3, board.value()[0].length / 3 * 2, board.value()[0].length, 2);
@@ -48,7 +51,7 @@ public class Main {
         sb.append("\n");
         for (int i = 0; i < board.length; i++) {
             for (int j = 0; j < board[i].length; j++) {
-                String c = switch (Optional.ofNullable(board[i][j]).orElse(Board.Cell.VOID).value) { // ■ ◼ ⬛ ■ ▦ ⬛ ⛶ ⬜
+                String c = switch (board[i][j].value) { // ■ ◼ ⬛ ■ ▦ ⬛ ⛶ ⬜
                     case (1) -> "\033[31m⬛\033[0m";
                     case (3) -> "\033[34m⬛\033[0m";
                     case (2) -> " *"; // < ! \

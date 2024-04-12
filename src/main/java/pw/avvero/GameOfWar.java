@@ -7,50 +7,55 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
 
-import static java.util.stream.Collectors.counting;
 import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.toList;
 
 public class GameOfWar implements State {
 
     @Override
-    public Board.Cell calculate(int i, int j, Board.Cell current, List<Board.Cell> neighbours) {
-        Map<Integer, Long> grouped = neighbours.stream().collect(groupingBy(cell -> cell.value, counting()));
-        int[] top = top(grouped);
-        if (current != null) {
-            int team = Math.toIntExact(Optional.ofNullable(grouped.get(current.value)).orElse(0L));
-            grouped.remove(current.value);
-            int[] enemy = top(grouped);
-            if (enemy == null) {
-               return current;
+    public Board.Cell calculate(Board.Cell current, List<Board.Cell> neighbours) {
+        Map<Integer, List<Board.Cell>> groups = neighbours.stream().collect(groupingBy(cell -> cell.value, toList()));
+        if (current.value != 0) {
+            List<Board.Cell> team = Optional.ofNullable(groups.get(current.value)).orElse(List.of());
+            groups.remove(current.value);
+            if (groups.isEmpty()) { // no enemies
+                return new Board.Cell(current.i, current.j, current.value);     // current stays
             } else {
-                int enemyValue = enemy[0];
-                int enemySize = enemy[1];
-                if (enemySize * ThreadLocalRandom.current().nextInt(0, 2) - 1 - team * ThreadLocalRandom.current().nextInt(0, 2) > 0) {
-                    return new Board.Cell(i, j, enemyValue);
-                } else {
-                    return new Board.Cell(i, j, current.value);
-                }
+                return encounter(current, team, groups);
             }
         } else {
-            if (neighbours.size() >= 3) {
-                if (top[1] >= 2) {
-                    return new Board.Cell(i, j, top[0]);
+            if (neighbours.size() >= 2) {
+                List<Board.Cell> biggest = biggest(groups);
+                if (biggest != null && biggest.size() >= 2) {
+                    return new Board.Cell(current.i, current.j, biggest.get(0).value);
                 }
             }
         }
-        return null;
+        return new Board.Cell(current.i, current.j, 0);
     }
 
-    private int[] top(Map<Integer, Long> grouped) {
+    private Board.Cell encounter(Board.Cell current, List<Board.Cell> team, Map<Integer, List<Board.Cell>> enemies) {
+        List<Board.Cell> biggestEnemy = biggest(enemies);
+
+        int enemyValue = biggestEnemy.get(0).value;
+        int enemySize = biggestEnemy.size();
+        if (enemySize * ThreadLocalRandom.current().nextInt(0, 2) - 1 - team.size() * ThreadLocalRandom.current().nextInt(0, 2) > 0) {
+            return new Board.Cell(current.i, current.j, enemyValue);
+        } else {
+            return new Board.Cell(current.i, current.j, current.value);
+        }
+    }
+
+    private List<Board.Cell> biggest(Map<Integer, List<Board.Cell>> grouped) {
         if (grouped.isEmpty()) return null;
-        int v = 0;
-        int c = 0;
-        for (Map.Entry<Integer, Long> entry : grouped.entrySet()) {
-            if (entry.getValue() > c) {
-                v = entry.getKey();
-                c = Math.toIntExact(entry.getValue());
+        int biggestSize = 0;
+        List<Board.Cell> biggestGroup = List.of();
+        for (Map.Entry<Integer, List<Board.Cell>> entry : grouped.entrySet()) {
+            if (entry.getValue().size() > biggestSize) {
+                biggestGroup = entry.getValue();
+                biggestSize = biggestGroup.size();
             }
         }
-        return new int[]{v, c};
+        return biggestGroup;
     }
 }

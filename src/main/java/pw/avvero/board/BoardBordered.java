@@ -11,6 +11,6 @@ public class BoardBordered extends Board {
     @Override
     public boolean exists(int i, int j) {
         if (i < 0 || i == value.length || j < 0 || j == value[i].length) return false;
-        return value[i][j] != null;
+        return value[i][j].value != 0;
     }
 }

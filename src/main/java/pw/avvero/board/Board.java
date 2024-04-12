@@ -30,7 +30,7 @@ public abstract class Board {
         for (int i = 0; i < value.length; i++) {
             for (int j = 0; j < value[i].length; j++) {
                 List<Cell> neighbours = neighbours(i, j);
-                next[i][j] = state.calculate(i, j, value[i][j], neighbours);
+                next[i][j] = state.calculate(value[i][j], neighbours);
             }
         }
         value = next;
@@ -50,7 +50,6 @@ public abstract class Board {
     }
 
     public static class Cell {
-        public static final Cell VOID = new Cell(-1, -1, 0);
         public int i;
         public int j;
         public int value;
@@ -59,6 +58,11 @@ public abstract class Board {
             this.i = i;
             this.j = j;
             this.value = value;
+        }
+
+        @Override
+        public String toString() {
+            return Integer.toString(value);
         }
     }
 }

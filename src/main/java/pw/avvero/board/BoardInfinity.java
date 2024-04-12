@@ -22,6 +22,6 @@ public class BoardInfinity extends Board {
         if (j == value[i].length) {
             j = 0;
         }
-        return value[i][j] != null;
+        return value[i][j].value != 0;
     }
 }

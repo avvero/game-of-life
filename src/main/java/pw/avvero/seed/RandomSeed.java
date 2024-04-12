@@ -11,6 +11,8 @@ public class RandomSeed implements Seed {
             for (int j = js; j < je; j++) {
                 if (ThreadLocalRandom.current().nextBoolean()) {
                     board.value()[i][j] = new Board.Cell(i, j, value);
+                } else {
+                    board.value()[i][j] = new Board.Cell(i, j, 0);
                 }
             }
         }
