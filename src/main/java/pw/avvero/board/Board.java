@@ -27,8 +27,7 @@ public abstract class Board {
         for (int i = 0; i < value.length; i++) {
             for (int j = 0; j < value[i].length; j++) {
                 List<Cell> neighbours = neighbours(i, j);
-                Cell cell = state.calculate(value[i][j], neighbours);
-                next[i][j] = cell.nextCycle();
+                next[i][j] = state.calculate(value[i][j], neighbours).nextCycle();
             }
         }
         value = next;
@@ -40,12 +39,14 @@ public abstract class Board {
             for (int y = -1; y < 2; y++) {
                 if (x == 0 && y == 0) continue;
                 if (exists(i + x, j + y)) {
-                    result.add(value[i + x][j + y]);
+                    result.add(get(i + x, j + y));
                 }
             }
         }
         return result;
     }
+
+    abstract Cell get(int i, int j);
 
     public void set(int i, int j, Supplier<Cell> factory) {
         value[i][j] = factory.get().acquire(i, j);

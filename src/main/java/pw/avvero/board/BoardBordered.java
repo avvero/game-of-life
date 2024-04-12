@@ -13,4 +13,9 @@ public class BoardBordered extends Board {
         if (i < 0 || i == value.length || j < 0 || j == value[i].length) return false;
         return value[i][j].value() != 0;
     }
+
+    @Override
+    Cell get(int i, int j) {
+        return value[i][j];
+    }
 }

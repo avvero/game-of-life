@@ -2,6 +2,7 @@ package pw.avvero;
 
 import pw.avvero.board.Board;
 import pw.avvero.board.BoardBordered;
+import pw.avvero.board.BoardInfinity;
 import pw.avvero.board.Cell;
 import pw.avvero.seed.DirectSeed;
 import pw.avvero.seed.RandomSeed;
@@ -23,7 +24,7 @@ public class Main {
         //
         Board board;
         if ("war".equals(mode)) {
-            board = new BoardBordered(x, y, new GameOfWar());
+            board = new BoardBordered(x, y, new GameOfWar3());
             new DirectSeed().initialize(board, 0, board.value().length, 0, board.value()[0].length, () -> ZERO);
             new RandomSeed().initialize(board, 0, board.value().length / 5, 0, board.value()[0].length / 5, () -> Cell.of(1));
             new RandomSeed().initialize(board, board.value().length / 5 * 4, board.value().length, board.value()[0].length / 5 * 4, board.value()[0].length, () -> Cell.of(3));
