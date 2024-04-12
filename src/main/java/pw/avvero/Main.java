@@ -35,7 +35,7 @@ public class Main {
         } else {
             board = new BoardBordered(x, y, new GameOfLife());
             new RandomSeed().initialize(board, 0, board.value().length, 0, board.value()[0].length, () -> ZERO);
-            new RandomSeed().initialize(board, 0, board.value().length, 0, board.value()[0].length, () -> Cell.of(1, new Cell.Role('⬛', 0, 0, 0, 0, 0, 0)));
+            new RandomSeed().initialize(board, 0, board.value().length, 0, board.value()[0].length, () -> Cell.of(1, new Cell.Role("⬛", 0, 0, 0, 0, 0, 0)));
         }
         // Engine
         int sleepTime = 100;
@@ -62,8 +62,8 @@ public class Main {
             for (int j = 0; j < board[i].length; j++) {
                 Cell cell = board[i][j];
                 String c = switch (cell.value()) { // ■ ◼ ⬛ ■ ▦ ⬛ ⛶ ⬜
-                    case (1) -> "\033[31m " + cell.getRole().sign() + "\033[0m";
-                    case (3) -> "\033[34m " + cell.getRole().sign() + "\033[0m";
+                    case (1) -> "\033[31m" + cell.getRole().sign() + "\033[0m";
+                    case (3) -> "\033[34m" + cell.getRole().sign() + "\033[0m";
                     case (2) -> " *"; // < ! \
                     case (4) -> " @";
                     default -> "  ";

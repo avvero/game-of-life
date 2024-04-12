@@ -14,8 +14,8 @@ import static pw.avvero.board.Cell.ZERO;
 public class GameOfWar implements State {
 
     @Override
-    public Cell calculate(Cell current, List<Cell> neighbours) {
-        Map<Integer, List<Cell>> groups = neighbours.stream().collect(groupingBy(Cell::value, toList()));
+    public Cell calculate(Cell current, Map<Integer, List<Cell>> neighbours) {
+        Map<Integer, List<Cell>> groups = neighbours.get(1).stream().collect(groupingBy(Cell::value, toList()));
         if (current.value() != 0) {
             List<Cell> team = Optional.ofNullable(groups.get(current.value())).orElse(List.of());
             groups.remove(current.value());

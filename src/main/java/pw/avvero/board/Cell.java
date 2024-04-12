@@ -4,7 +4,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class Cell {
 
-    public static final Cell ZERO = new Cell(-1, -1, 0, 0, 0, new Role(' ', 0, 0, 0, 0, 0, 0));
+    public static final Cell ZERO = new Cell(-1, -1, 0, 0, 0, new Role("  ", 0, 0, 0, 0, 0, 0));
     private int i = -1;
     private int j = -1;
     private int value;
@@ -12,7 +12,7 @@ public class Cell {
     private int deathAge;
     private Role role = null;
 
-    public static record Role(char sign,
+    public static record Role(String sign,
                               int health,
                               int strength,
                               int defence,
