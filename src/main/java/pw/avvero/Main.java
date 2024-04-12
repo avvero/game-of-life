@@ -5,6 +5,7 @@ import pw.avvero.board.BoardBordered;
 import pw.avvero.board.Cell;
 import pw.avvero.seed.DirectSeed;
 import pw.avvero.seed.RandomSeed;
+import pw.avvero.seed.RoleFactory;
 
 import java.io.IOException;
 
@@ -26,15 +27,15 @@ public class Main {
             board = new BoardBordered(x, y, new GameOfWar3());
             new DirectSeed().initialize(board, 0, board.value().length, 0, board.value()[0].length, () -> ZERO);
             new RandomSeed().initialize(board, 0, board.value().length / 5, 0, board.value()[0].length / 5,
-                    () -> Cell.of(1, new Cell.Role(10, 10, 10)));
+                    () -> Cell.of(1, RoleFactory.get()));
             new RandomSeed().initialize(board, board.value().length / 5 * 4, board.value().length, board.value()[0].length / 5 * 4, board.value()[0].length,
-                    () -> Cell.of(3, new Cell.Role(10, 10, 10)));
+                    () -> Cell.of(3, RoleFactory.get()));
 //            new RandomSeed().initialize(board, 0, board.value().length / 3, board.value()[0].length / 3 * 2, board.value()[0].length, 2);
 //            new RandomSeed().initialize(board, board.value().length / 3 * 2, board.value().length, 0, board.value()[0].length / 3, 4);
         } else {
             board = new BoardBordered(x, y, new GameOfLife());
             new RandomSeed().initialize(board, 0, board.value().length, 0, board.value()[0].length, () -> ZERO);
-            new RandomSeed().initialize(board, 0, board.value().length, 0, board.value()[0].length, () -> Cell.of(1, new Cell.Role(0, 0, 0)));
+            new RandomSeed().initialize(board, 0, board.value().length, 0, board.value()[0].length, () -> Cell.of(1, new Cell.Role('⬛', 0, 0, 0, 0, 0, 0)));
         }
         // Engine
         int sleepTime = 100;
@@ -59,9 +60,10 @@ public class Main {
         sb.append("\n");
         for (int i = 0; i < board.length; i++) {
             for (int j = 0; j < board[i].length; j++) {
-                String c = switch (board[i][j].value()) { // ■ ◼ ⬛ ■ ▦ ⬛ ⛶ ⬜
-                    case (1) -> "\033[31m⬛\033[0m";
-                    case (3) -> "\033[34m⬛\033[0m";
+                Cell cell = board[i][j];
+                String c = switch (cell.value()) { // ■ ◼ ⬛ ■ ▦ ⬛ ⛶ ⬜
+                    case (1) -> "\033[31m " + cell.getRole().sign() + "\033[0m";
+                    case (3) -> "\033[34m " + cell.getRole().sign() + "\033[0m";
                     case (2) -> " *"; // < ! \
                     case (4) -> " @";
                     default -> "  ";

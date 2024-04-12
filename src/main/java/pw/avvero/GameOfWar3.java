@@ -1,6 +1,7 @@
 package pw.avvero;
 
 import pw.avvero.board.Cell;
+import pw.avvero.seed.RoleFactory;
 
 import java.util.List;
 import java.util.Map;
@@ -28,7 +29,8 @@ public class GameOfWar3 implements State {
             if (neighbours.size() >= 2) {
                 List<Cell> biggest = biggest(groups);
                 if (biggest != null && biggest.size() >= 2) { // new
-                    return biggest.get(0).acquire(current);
+//                    return biggest.get(0).acquire(current);
+                    return Cell.of(biggest.get(0).value(), RoleFactory.get());
                 }
             }
         }
@@ -43,7 +45,7 @@ public class GameOfWar3 implements State {
             for(Cell enemy : enemies) {
                 firstEnemy = firstEnemy != null ? firstEnemy : enemy;
                 int enemyMight = ThreadLocalRandom.current().nextInt(0, enemy.getRole().strength());
-                health -= Math.max(0, defence - enemyMight);
+                health -= calculateDamage(enemy.getRole().strength(), defence, 0.3, 10, 0);
             }
         }
         if (health <= 0) {
@@ -55,7 +57,7 @@ public class GameOfWar3 implements State {
 
     private int calculateDamage(int attack, int defense, double critChance, double critMultiplier, int fireDamage) {
         int baseDamage = Math.max(0, attack - defense);
-        if (Math.random() < critChance) {
+        if (ThreadLocalRandom.current().nextDouble() < critChance) {
             baseDamage *= critMultiplier;
         }
         baseDamage += fireDamage; // Пример добавления специального урона от оружия
