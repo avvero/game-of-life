@@ -1,6 +1,6 @@
 package pw.avvero;
 
-import pw.avvero.board.Board;
+import pw.avvero.board.Cell;
 
 import java.util.List;
 import java.util.Map;
@@ -9,48 +9,49 @@ import java.util.concurrent.ThreadLocalRandom;
 
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
+import static pw.avvero.board.Cell.ZERO;
 
 public class GameOfWar implements State {
 
     @Override
-    public Board.Cell calculate(Board.Cell current, List<Board.Cell> neighbours) {
-        Map<Integer, List<Board.Cell>> groups = neighbours.stream().collect(groupingBy(cell -> cell.value, toList()));
-        if (current.value != 0) {
-            List<Board.Cell> team = Optional.ofNullable(groups.get(current.value)).orElse(List.of());
-            groups.remove(current.value);
+    public Cell calculate(Cell current, List<Cell> neighbours) {
+        Map<Integer, List<Cell>> groups = neighbours.stream().collect(groupingBy(cell -> cell.value(), toList()));
+        if (current.value() != 0) {
+            List<Cell> team = Optional.ofNullable(groups.get(current.value())).orElse(List.of());
+            groups.remove(current.value());
             if (groups.isEmpty()) { // no enemies
-                return new Board.Cell(current.i, current.j, current.value);     // current stays
+                return current;     // current stays
             } else {
                 return encounter(current, team, groups);
             }
         } else {
             if (neighbours.size() >= 2) {
-                List<Board.Cell> biggest = biggest(groups);
-                if (biggest != null && biggest.size() >= 2) {
-                    return new Board.Cell(current.i, current.j, biggest.get(0).value);
+                List<Cell> biggest = biggest(groups);
+                if (biggest != null && biggest.size() >= 2) { // new
+                    return Cell.insteadOf(current, Cell.of(biggest.get(0).value()));
                 }
             }
         }
-        return new Board.Cell(current.i, current.j, 0);
+        return Cell.insteadOf(current, ZERO); // empty
     }
 
-    private Board.Cell encounter(Board.Cell current, List<Board.Cell> team, Map<Integer, List<Board.Cell>> enemies) {
-        List<Board.Cell> biggestEnemy = biggest(enemies);
+    private Cell encounter(Cell current, List<Cell> team, Map<Integer, List<Cell>> enemies) {
+        List<Cell> biggestEnemy = biggest(enemies);
 
-        int enemyValue = biggestEnemy.get(0).value;
+        Cell enemy = biggestEnemy.get(0);
         int enemySize = biggestEnemy.size();
         if (enemySize * ThreadLocalRandom.current().nextInt(0, 2) - 1 - team.size() * ThreadLocalRandom.current().nextInt(0, 2) > 0) {
-            return new Board.Cell(current.i, current.j, enemyValue);
+            return Cell.insteadOf(current, Cell.of(enemy.value()));
         } else {
-            return new Board.Cell(current.i, current.j, current.value);
+            return current;
         }
     }
 
-    private List<Board.Cell> biggest(Map<Integer, List<Board.Cell>> grouped) {
+    private List<Cell> biggest(Map<Integer, List<Cell>> grouped) {
         if (grouped.isEmpty()) return null;
         int biggestSize = 0;
-        List<Board.Cell> biggestGroup = List.of();
-        for (Map.Entry<Integer, List<Board.Cell>> entry : grouped.entrySet()) {
+        List<Cell> biggestGroup = List.of();
+        for (Map.Entry<Integer, List<Cell>> entry : grouped.entrySet()) {
             if (entry.getValue().size() > biggestSize) {
                 biggestGroup = entry.getValue();
                 biggestSize = biggestGroup.size();

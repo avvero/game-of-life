@@ -30,7 +30,8 @@ public abstract class Board {
         for (int i = 0; i < value.length; i++) {
             for (int j = 0; j < value[i].length; j++) {
                 List<Cell> neighbours = neighbours(i, j);
-                next[i][j] = state.calculate(value[i][j], neighbours);
+                Cell cell = state.calculate(value[i][j], neighbours);
+                next[i][j] = cell.nextCycle();
             }
         }
         value = next;
@@ -42,27 +43,14 @@ public abstract class Board {
             for (int y = -1; y < 2; y++) {
                 if (x == 0 && y == 0) continue;
                 if (exists(i + x, j + y)) {
-                    result.add(new Cell(i + x, j + y, value[i + x][j + y].value)); // do copy cell
+                    result.add(value[i + x][j + y]);
                 }
             }
         }
         return result;
     }
 
-    public static class Cell {
-        public int i;
-        public int j;
-        public int value;
-
-        public Cell(int i, int j, int value) {
-            this.i = i;
-            this.j = j;
-            this.value = value;
-        }
-
-        @Override
-        public String toString() {
-            return Integer.toString(value);
-        }
+    public void set(int i, int j, Cell cell) {
+        value[i][j] = new Cell(i, j, cell.value());
     }
 }
