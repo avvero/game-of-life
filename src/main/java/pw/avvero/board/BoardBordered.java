@@ -1,9 +1,11 @@
 package pw.avvero.board;
 
+import pw.avvero.Game;
+
 public class BoardBordered extends Board {
 
-    public BoardBordered(int x, int y) {
-        super(new int[x][y]);
+    public BoardBordered(int x, int y, Game game) {
+        super(new int[x][y], game);
     }
 
     @Override

@@ -12,24 +12,23 @@ public class Main {
         if (args.length < 2) {
 //            System.out.println("Usage: java GameOfLife <x> <y>");
 //            System.exit(1);
-            args = new String[]{"46", "90"};
+            args = new String[]{"20", "20"};
         }
         int x = Integer.parseInt(args[0]);
         int y = Integer.parseInt(args[1]);
         //
-        Board board = new BoardBordered(x, y);
+//        Board board = new BoardBordered(x, y, new GameOfLife());
+//        new RandomSeed().initialize(board.value(), 0, board.value().length / 3, 0,  board.value()[0].length / 3, 1);
         //
-        Seed seed = new RandomSeed();
-        seed.initialize(board.value(), 0, board.value().length / 3, 0,  board.value()[0].length / 3, 1);
-        GameOfLife game = new GameOfLife(board);
-        //
-//        GameOfLifeAndWar game = new GameOfLifeAndWar(board);
+        Board board = new BoardBordered(x, y, new GameOfLifeAndWar());
+        new RandomSeed().initialize(board.value(), 0, board.value().length / 2, 0, board.value()[0].length / 2, 1);
+        new RandomSeed().initialize(board.value(), board.value().length / 2, board.value().length, board.value()[0].length / 2, board.value()[0].length,-1);
         // Engine
         int sleepTime = 100;
         display(board);
         Thread.sleep(sleepTime);
         while (true) {
-            game.newCycle();
+            board.nextCycle();
             display(board);
             Thread.sleep(sleepTime);
         }
