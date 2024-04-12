@@ -3,9 +3,9 @@ package pw.avvero.board;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Cell {
-    public static final Cell ZERO = new Cell(0, 0, 0);
-    private int i;
-    private int j;
+    public static final Cell ZERO = new Cell(-1, -1, 0);
+    private int i = -1;
+    private int j = -1;
     private int value;
     private int age;
     private int deathAge;
@@ -17,7 +17,7 @@ public class Cell {
     private Cell() {
     }
 
-    Cell(int i, int j, int value) {
+    private Cell(int i, int j, int value) {
         this.i = i;
         this.j = j;
         this.value = value;
@@ -29,8 +29,14 @@ public class Cell {
         return new Cell(-1, -1, value);
     }
 
-    public static Cell insteadOf(Cell current, Cell next) {
-        return new Cell(current.i, current.j, next.value);
+    public Cell acquire(Cell old) {
+        return new Cell(old.i, old.j, this.value);
+    }
+
+    Cell acquire(int i, int j) { // dirty
+        this.i = i;
+        this.j = j;
+        return this;
     }
 
     public Cell nextCycle() {

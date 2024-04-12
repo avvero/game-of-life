@@ -15,7 +15,7 @@ public class GameOfWar implements State {
 
     @Override
     public Cell calculate(Cell current, List<Cell> neighbours) {
-        Map<Integer, List<Cell>> groups = neighbours.stream().collect(groupingBy(cell -> cell.value(), toList()));
+        Map<Integer, List<Cell>> groups = neighbours.stream().collect(groupingBy(Cell::value, toList()));
         if (current.value() != 0) {
             List<Cell> team = Optional.ofNullable(groups.get(current.value())).orElse(List.of());
             groups.remove(current.value());
@@ -28,11 +28,11 @@ public class GameOfWar implements State {
             if (neighbours.size() >= 2) {
                 List<Cell> biggest = biggest(groups);
                 if (biggest != null && biggest.size() >= 2) { // new
-                    return Cell.insteadOf(current, Cell.of(biggest.get(0).value()));
+                    return biggest.get(0).acquire(current);
                 }
             }
         }
-        return Cell.insteadOf(current, ZERO); // empty
+        return ZERO.acquire(current); // empty
     }
 
     private Cell encounter(Cell current, List<Cell> team, Map<Integer, List<Cell>> enemies) {
@@ -41,7 +41,7 @@ public class GameOfWar implements State {
         Cell enemy = biggestEnemy.get(0);
         int enemySize = biggestEnemy.size();
         if (enemySize * ThreadLocalRandom.current().nextInt(0, 2) - 1 - team.size() * ThreadLocalRandom.current().nextInt(0, 2) > 0) {
-            return Cell.insteadOf(current, Cell.of(enemy.value()));
+            return enemy.acquire(current);
         } else {
             return current;
         }

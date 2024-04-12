@@ -4,6 +4,7 @@ import pw.avvero.State;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
 
 public abstract class Board {
 
@@ -17,10 +18,6 @@ public abstract class Board {
 
     public Cell[][] value() {
         return value;
-    }
-
-    public void update(Cell[][] value) {
-        this.value = value;
     }
 
     abstract boolean exists(int i, int j);
@@ -50,7 +47,7 @@ public abstract class Board {
         return result;
     }
 
-    public void set(int i, int j, Cell cell) {
-        value[i][j] = new Cell(i, j, cell.value());
+    public void set(int i, int j, Supplier<Cell> factory) {
+        value[i][j] = factory.get().acquire(i, j);
     }
 }
