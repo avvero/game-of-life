@@ -1,15 +1,12 @@
 package pw.avvero;
 
-import pw.avvero.board.Board;
-
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ThreadLocalRandom;
 
 import static java.util.stream.Collectors.counting;
 import static java.util.stream.Collectors.groupingBy;
 
-public class GameOfLifeAndWar implements Game{
+public class GameOfLifeAndWar implements State {
 
     @Override
     public int calculate(int current, List<int[]> neighbours) {
@@ -22,7 +19,7 @@ public class GameOfLifeAndWar implements Game{
                 return top[0];
             }
         } else {
-            if (neighbours.size() == 3) {
+            if (neighbours.size() >= 3) {
                 if (top[1] >= 2) {
                     return top[0];
                 }

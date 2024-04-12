@@ -1,6 +1,6 @@
 package pw.avvero.board;
 
-import pw.avvero.Game;
+import pw.avvero.State;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,11 +8,11 @@ import java.util.List;
 public abstract class Board {
 
     protected int[][] value;
-    protected Game game;
+    protected State state;
 
-    public Board(int[][] value, Game game) {
+    public Board(int[][] value, State state) {
         this.value = value;
-        this.game = game;
+        this.state = state;
     }
 
     public int[][] value() {
@@ -30,7 +30,7 @@ public abstract class Board {
         for (int i = 0; i < value.length; i++) {
             for (int j = 0; j < value[i].length; j++) {
                 List<int[]> neighbours = neighbours(i, j);
-                next[i][j] = game.calculate(value[i][j], neighbours);
+                next[i][j] = state.calculate(value[i][j], neighbours);
             }
         }
         value = next;

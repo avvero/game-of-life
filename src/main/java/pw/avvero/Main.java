@@ -3,7 +3,6 @@ package pw.avvero;
 import pw.avvero.board.Board;
 import pw.avvero.board.BoardBordered;
 import pw.avvero.seed.RandomSeed;
-import pw.avvero.seed.Seed;
 
 import java.io.IOException;
 
@@ -21,8 +20,8 @@ public class Main {
 //        new RandomSeed().initialize(board.value(), 0, board.value().length / 3, 0,  board.value()[0].length / 3, 1);
         //
         Board board = new BoardBordered(x, y, new GameOfLifeAndWar());
-        new RandomSeed().initialize(board.value(), 0, board.value().length / 2, 0, board.value()[0].length / 2, 1);
-        new RandomSeed().initialize(board.value(), board.value().length / 2, board.value().length, board.value()[0].length / 2, board.value()[0].length,-1);
+        new RandomSeed().initialize(board.value(), 0, board.value().length / 3, 0, board.value()[0].length / 3, 1);
+        new RandomSeed().initialize(board.value(), board.value().length / 3 * 2, board.value().length, board.value()[0].length / 3 * 2, board.value()[0].length, -1);
         // Engine
         int sleepTime = 100;
         display(board);

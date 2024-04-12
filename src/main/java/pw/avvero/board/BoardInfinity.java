@@ -1,11 +1,11 @@
 package pw.avvero.board;
 
-import pw.avvero.Game;
+import pw.avvero.State;
 
 public class BoardInfinity extends Board {
 
-    public BoardInfinity(int x, int y, Game game) {
-        super(new int[x][y], game);
+    public BoardInfinity(int x, int y, State state) {
+        super(new int[x][y], state);
     }
 
     @Override
