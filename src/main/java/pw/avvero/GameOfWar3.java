@@ -1,5 +1,6 @@
 package pw.avvero;
 
+import pw.avvero.board.Board;
 import pw.avvero.board.Cell;
 import pw.avvero.seed.RoleFactory;
 
@@ -15,8 +16,11 @@ import static pw.avvero.board.Cell.ZERO;
 public class GameOfWar3 implements State {
 
     @Override
-    public Cell calculate(Cell current, Map<Integer, List<Cell>> neighbours) {
-        Map<Integer, List<Cell>> groups = Optional.ofNullable(neighbours.get(1)).orElse(List.of())
+    public Cell calculate(Cell current, List<Board.Neighbour> neighbours) {
+        Map<Integer, List<Cell>> groups = neighbours.stream()
+                .filter(neighbour -> neighbour.level() == 1)
+                .map(Board.Neighbour::cell)
+                .toList()
                 .stream().collect(groupingBy(Cell::value, toList()));
         if (current.value() != 0) {
             List<Cell> team = Optional.ofNullable(groups.get(current.value())).orElse(List.of());
@@ -27,7 +31,7 @@ public class GameOfWar3 implements State {
                 return encounter(current, team, groups);
             }
         } else {
-            if (Optional.ofNullable(neighbours.get(1)).orElse(List.of()).size() >= 2) {
+            if (neighbours.size() >= 2) {
                 List<Cell> biggest = biggest(groups);
                 if (biggest != null && biggest.size() >= 2) { // new
 //                    return biggest.get(0).acquire(current);

@@ -1,5 +1,6 @@
 package pw.avvero;
 
+import pw.avvero.board.Board;
 import pw.avvero.board.Cell;
 
 import java.util.List;
@@ -14,8 +15,12 @@ import static pw.avvero.board.Cell.ZERO;
 public class GameOfWar implements State {
 
     @Override
-    public Cell calculate(Cell current, Map<Integer, List<Cell>> neighbours) {
-        Map<Integer, List<Cell>> groups = neighbours.get(1).stream().collect(groupingBy(Cell::value, toList()));
+    public Cell calculate(Cell current, List<Board.Neighbour> neighbours) {
+        Map<Integer, List<Cell>> groups = neighbours.stream()
+                .filter(neighbour -> neighbour.level() == 1)
+                .map(Board.Neighbour::cell)
+                .toList()
+                .stream().collect(groupingBy(Cell::value, toList()));
         if (current.value() != 0) {
             List<Cell> team = Optional.ofNullable(groups.get(current.value())).orElse(List.of());
             groups.remove(current.value());

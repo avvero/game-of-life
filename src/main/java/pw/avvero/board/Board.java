@@ -31,20 +31,24 @@ public abstract class Board {
         Cell[][] next = new Cell[value.length][value[0].length];
         for (int i = 0; i < value.length; i++) {
             for (int j = 0; j < value[i].length; j++) {
-                Map<Integer, List<Cell>> neighbours = neighbours(i, j);
+                List<Neighbour> neighbours = neighbours(i, j);
                 next[i][j] = state.calculate(value[i][j], neighbours).nextCycle();
             }
         }
         value = next;
     }
 
-    public Map<Integer, List<Cell>> neighbours(int i, int j) {
-        Map<Integer, List<Cell>> result = new HashMap<>();
-        for (int x = -1; x < 2; x++) {
-            for (int y = -1; y < 2; y++) {
+    public record Neighbour(int level, Cell cell){
+
+    }
+
+    public List<Neighbour> neighbours(int i, int j) {
+        List<Neighbour> result = new ArrayList<>();
+        for (int x = -2; x < 3; x++) {
+            for (int y = -2; y < 3; y++) {
                 if (x == 0 && y == 0) continue;
                 if (exists(i + x, j + y)) {
-                    result.computeIfAbsent(max(abs(x), abs(y)), k -> new ArrayList<>()).add(get(i + x, j + y));
+                    result.add(new Neighbour(max(abs(x), abs(y)), get(i + x, j + y)));
                 }
             }
         }
