@@ -48,9 +48,9 @@ public class Main {
         for (int i = 0; i < board.length; i++) {
             for (int j = 0; j < board[i].length; j++) {
                 String c = switch (board[i][j]) { // ■ ◼ ⬛ ■ ▦ ⬛ ⛶ ⬜
-                    case (1) -> " ▦";
-                    case (3) -> " ⛶";
-                    case (2) -> " *";
+                    case (1) -> "\033[31m⬛\033[0m";
+                    case (3) -> "\033[34m⬛\033[0m";
+                    case (2) -> " *"; // < ! \
                     case (4) -> " @";
                     default -> "  ";
                 };
