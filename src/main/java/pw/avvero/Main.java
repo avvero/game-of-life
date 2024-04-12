@@ -19,9 +19,11 @@ public class Main {
 //        Board board = new BoardBordered(x, y, new GameOfLife());
 //        new RandomSeed().initialize(board.value(), 0, board.value().length / 3, 0,  board.value()[0].length / 3, 1);
         //
-        Board board = new BoardBordered(x, y, new GameOfLifeAndWar());
+        Board board = new BoardBordered(x, y, new GameOfWar());
         new RandomSeed().initialize(board.value(), 0, board.value().length / 3, 0, board.value()[0].length / 3, 1);
-        new RandomSeed().initialize(board.value(), board.value().length / 3 * 2, board.value().length, board.value()[0].length / 3 * 2, board.value()[0].length, -1);
+//        new RandomSeed().initialize(board.value(), 0, board.value().length / 3, board.value()[0].length / 3 * 2, board.value()[0].length, 2);
+        new RandomSeed().initialize(board.value(), board.value().length / 3 * 2, board.value().length, board.value()[0].length / 3 * 2, board.value()[0].length, 3);
+//        new RandomSeed().initialize(board.value(), board.value().length / 3 * 2, board.value().length, 0, board.value()[0].length / 3, 4);
         // Engine
         int sleepTime = 100;
         display(board);
@@ -47,7 +49,9 @@ public class Main {
             for (int j = 0; j < board[i].length; j++) {
                 String c = switch (board[i][j]) { // ■ ◼ ⬛ ■ ▦ ⬛ ⛶ ⬜
                     case (1) -> " ▦";
-                    case (-1) -> " ⛶";
+                    case (3) -> " ⛶";
+                    case (2) -> " *";
+                    case (4) -> " @";
                     default -> "  ";
                 };
                 sb.append(c);
