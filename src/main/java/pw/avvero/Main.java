@@ -12,24 +12,28 @@ import static pw.avvero.board.Cell.ZERO;
 
 public class Main {
     public static void main(String[] args) throws InterruptedException {
-        if (args.length < 2) {
+        if (args.length < 3) {
 //            System.out.println("Usage: java GameOfLife <x> <y>");
 //            System.exit(1);
-            args = new String[]{"20", "20"};
+            args = new String[]{"20", "20", "life"};
         }
         int x = Integer.parseInt(args[0]);
         int y = Integer.parseInt(args[1]);
+        String mode = args[2];
         //
-//        Board board = new BoardBordered(x, y, new GameOfLife());
-//        new RandomSeed().initialize(board, 0, board.value().length, 0, board.value()[0].length, ZERO);
-//        new RandomSeed().initialize(board, 0, board.value().length, 0,  board.value()[0].length, Cell.of(1));
-        //
-        Board board = new BoardBordered(x, y, new GameOfWar());
-        new DirectSeed().initialize(board, 0, board.value().length, 0, board.value()[0].length, ZERO);
-        new RandomSeed().initialize(board, 0, board.value().length / 5, 0, board.value()[0].length / 5, Cell.of(1));
-        new RandomSeed().initialize(board, board.value().length / 5 * 4, board.value().length, board.value()[0].length / 5 * 4, board.value()[0].length, Cell.of(3));
+        Board board;
+        if ("war".equals(mode)) {
+            board = new BoardBordered(x, y, new GameOfWar());
+            new DirectSeed().initialize(board, 0, board.value().length, 0, board.value()[0].length, ZERO);
+            new RandomSeed().initialize(board, 0, board.value().length / 5, 0, board.value()[0].length / 5, Cell.of(1));
+            new RandomSeed().initialize(board, board.value().length / 5 * 4, board.value().length, board.value()[0].length / 5 * 4, board.value()[0].length, Cell.of(3));
 //        new RandomSeed().initialize(board.value(), 0, board.value().length / 3, board.value()[0].length / 3 * 2, board.value()[0].length, 2);
 //        new RandomSeed().initialize(board.value(), board.value().length / 3 * 2, board.value().length, 0, board.value()[0].length / 3, 4);
+        } else {
+            board = new BoardBordered(x, y, new GameOfLife());
+            new RandomSeed().initialize(board, 0, board.value().length, 0, board.value()[0].length, ZERO);
+            new RandomSeed().initialize(board, 0, board.value().length, 0, board.value()[0].length, Cell.of(1));
+        }
         // Engine
         int sleepTime = 100;
         display(board);
