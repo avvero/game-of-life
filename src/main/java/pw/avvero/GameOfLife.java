@@ -9,7 +9,7 @@ import static pw.avvero.board.Cell.ZERO;
 public class GameOfLife implements State {
 
     private Cell newCell() {
-        return Cell.of(1);
+        return Cell.of(1, new Cell.Role(0, 0, 0));
     }
 
     @Override

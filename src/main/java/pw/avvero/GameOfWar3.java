@@ -35,16 +35,31 @@ public class GameOfWar3 implements State {
         return ZERO.acquire(current); // empty
     }
 
-    private Cell encounter(Cell current, List<Cell> team, Map<Integer, List<Cell>> enemies) {
-        List<Cell> biggestEnemy = biggest(enemies);
-
-        Cell enemy = biggestEnemy.get(0);
-        int enemySize = biggestEnemy.size();
-        if (enemySize * ThreadLocalRandom.current().nextInt(0, 2) - 1 - team.size() * ThreadLocalRandom.current().nextInt(0, 2) > 0) {
-            return enemy.acquire(current);
+    private Cell encounter(Cell current, List<Cell> team, Map<Integer, List<Cell>> enemiesGroups) {
+        int health = current.getRole().health();
+        int defence = current.getRole().defence();
+        Cell firstEnemy = null;
+        for (List<Cell> enemies : enemiesGroups.values()) {
+            for(Cell enemy : enemies) {
+                firstEnemy = firstEnemy != null ? firstEnemy : enemy;
+                int enemyMight = ThreadLocalRandom.current().nextInt(0, enemy.getRole().strength());
+                health -= Math.max(0, defence - enemyMight);
+            }
+        }
+        if (health <= 0) {
+            return ZERO.acquire(current);
         } else {
             return current;
         }
+    }
+
+    private int calculateDamage(int attack, int defense, double critChance, double critMultiplier, int fireDamage) {
+        int baseDamage = Math.max(0, attack - defense);
+        if (Math.random() < critChance) {
+            baseDamage *= critMultiplier;
+        }
+        baseDamage += fireDamage; // Пример добавления специального урона от оружия
+        return baseDamage;
     }
 
     private List<Cell> biggest(Map<Integer, List<Cell>> grouped) {

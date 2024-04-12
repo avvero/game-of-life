@@ -4,38 +4,45 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class Cell {
 
-    public static final Cell ZERO = new Cell(-1, -1, 0, 0, 0, 0);
+    public static final Cell ZERO = new Cell(-1, -1, 0, 0, 0, new Role(0, 0, 0));
     private int i = -1;
     private int j = -1;
     private int value;
     private int age;
     private int deathAge;
-    private int health = 10;
+    private Role role = null;
+
+    public static record Role(int health, int strength, int defence) {
+    }
 
     public int value() {
         return value;
     }
 
-    private Cell(int i, int j, int value, int age, int deathAge, int health) {
+    public Role getRole() {
+        return role;
+    }
+
+    private Cell(int i, int j, int value, int age, int deathAge, Role role) {
         this.i = i;
         this.j = j;
         this.value = value;
         this.age = age;
         this.deathAge = deathAge; //10 + 10 * ThreadLocalRandom.current().nextInt(0, 10);
-        this.health = health;
+        this.role = role;
     }
 
-    public static Cell of(int value) {
-        return new Cell(-1, -1, value, 0, 10 + 10 * ThreadLocalRandom.current().nextInt(0, 10), 10);
+    public static Cell of(int value, Role role) {
+        return new Cell(-1, -1, value, 0, 10 + 10 * ThreadLocalRandom.current().nextInt(0, 10), role);
     }
 
     public Cell acquire(Cell old) {
-        return new Cell(old.i, old.j, this.value, this.age, this.deathAge, this.health);
+        return new Cell(old.i, old.j, this.value, this.age, this.deathAge, this.role);
     }
 
     public Cell nextCycle() {
         int incAge = 0;//1;
-        Cell next = new Cell(this.i, this.j, this.value, this.age + incAge, this.deathAge, this.health);
+        Cell next = new Cell(this.i, this.j, this.value, this.age + incAge, this.deathAge, this.role);
         if (next.isAlive()) {
             return next;
         } else {
@@ -51,7 +58,7 @@ public class Cell {
 
     public boolean isAlive() {
         if (age >= deathAge) return false;
-        if (health < 0) return false;
+        if (role.health < 0) return false;
         return true;
     }
 
