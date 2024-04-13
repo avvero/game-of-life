@@ -15,7 +15,27 @@ public class BoardBordered extends Board {
     }
 
     @Override
-    Cell get(int i, int j) {
+    public Cell get(int i, int j) {
         return value[i][j];
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < value.length; i++) {
+            for (int j = 0; j < value[i].length; j++) {
+                Cell cell = value[i][j];
+                String c = switch (cell.value()) { // ■ ◼ ⬛ ■ ▦ ⬛ ⛶ ⬜
+                    case (1) -> "" + cell.getRole().sign() + "";
+                    case (3) -> "" + cell.getRole().sign() + "";
+                    case (2) -> " *"; // < ! \
+                    case (4) -> " @";
+                    default -> "  ";
+                };
+                sb.append(c);
+            }
+            sb.append("\n");
+        }
+        return sb.toString();
     }
 }

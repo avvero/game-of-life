@@ -10,64 +10,47 @@ import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
 
 import static java.util.stream.Collectors.groupingBy;
-import static java.util.stream.Collectors.toList;
 import static pw.avvero.board.Cell.ZERO;
 
 public class GameOfWar3 implements State {
 
     @Override
     public Cell calculate(Cell current, List<Board.Neighbour> neighbours) {
-        Map<Integer, List<Cell>> groups = neighbours.stream()
-                .filter(neighbour -> neighbour.level() == 1)
-                .map(Board.Neighbour::cell)
-                .toList()
-                .stream().collect(groupingBy(Cell::value, toList()));
-        Map<Integer, List<Cell>> rangeGroups = neighbours.stream()
-                .filter(neighbour -> neighbour.level() > 1)
-                .map(Board.Neighbour::cell)
-                .toList()
-                .stream().collect(groupingBy(Cell::value, toList()));
+        CombatEnvironment combatEnvironment = CombatEnvironment.calculate(current, neighbours);
         if (current.value() != 0) {
-            List<Cell> team = Optional.ofNullable(groups.get(current.value())).orElse(List.of());
-            groups.remove(current.value());
-            rangeGroups.remove(current.value());
-            if (groups.isEmpty()) { // no enemies
+            if (combatEnvironment.closeEnemyGroups.isEmpty()) { // no close enemies
                 return current;     // current stays
             } else {
-                return encounter(current, team, groups, rangeGroups);
+                return encounter(current, combatEnvironment);
             }
         } else {
-            if (neighbours.size() >= 2) {
-                List<Cell> biggest = biggest(groups);
-                if (biggest != null && biggest.size() >= 2) { // new
-//                    return biggest.get(0).acquire(current);
-                    int value = biggest.get(0).value();
-                    return Cell.of(value, RoleFactory.get());
-                }
+            if (combatEnvironment.closeEnemyGroups.size() >= 2) {
+                Cell claim = combatEnvironment.closeEnemyGroups.entrySet().stream().findFirst().get().getValue().get(0).acquire(current); // todo first claim?
+                return calculate(claim, neighbours);
+            } else if (combatEnvironment.closeEnemyGroups.size() == 1
+                    && combatEnvironment.closeEnemyGroups.entrySet().stream().findFirst().get().getValue().size() > 2
+                    && combatEnvironment.enemies.size() > 3) {
+                Cell claim = combatEnvironment.closeEnemyGroups.entrySet().stream().findFirst().get().getValue().get(0).acquire(current);
+                return claim.acquire(current); // todo first acquire?
+            } else {
+                return current;
             }
         }
-        return ZERO.acquire(current); // empty
     }
 
-    private Cell encounter(Cell current,
-                           List<Cell> team,
-                           Map<Integer, List<Cell>> enemiesGroups,
-                           Map<Integer, List<Cell>> rangeGroups) {
+    private Cell encounter(Cell current, CombatEnvironment combatEnvironment) {
         int health = current.getRole().health();
         int defence = current.getRole().defence();
         Cell firstEnemy = null;
-        for (Map<Integer, List<Cell>> group : List.of(enemiesGroups, rangeGroups)) {
-            for (List<Cell> enemies : group.values()) {
-                for(Cell enemy : enemies) {
-                    firstEnemy = firstEnemy != null ? firstEnemy : enemy;
-                    //int enemyMight = ThreadLocalRandom.current().nextInt(0, enemy.getRole().strength());
-                    health -= calculateDamage(enemy.getRole().strength(), defence, enemy.getRole().critChance(),
-                            enemy.getRole().critMultiplier(), enemy.getRole().fireDamage());
-                }
+        for(Cell enemy : combatEnvironment.enemies) {
+            health -= calculateDamage(enemy.getRole().strength(), defence, enemy.getRole().critChance(),
+                    enemy.getRole().critMultiplier(), enemy.getRole().fireDamage());
+            if (firstEnemy == null && health <= 0) {
+                firstEnemy = enemy;
             }
         }
         if (health <= 0) {
-            return ZERO.acquire(current);
+            return firstEnemy.acquire(current);
         } else {
             return current;
         }

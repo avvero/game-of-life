@@ -25,7 +25,7 @@ public class BoardInfinity extends Board {
         return value[i][j].value() != 0;
     }
 
-    Cell get(int i, int j) {
+    public Cell get(int i, int j) {
         if (i < 0) {
             i = value.length + i;
         }

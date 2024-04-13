@@ -3,9 +3,7 @@ package pw.avvero.board;
 import pw.avvero.State;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Supplier;
 
 import static java.lang.Math.abs;
@@ -38,7 +36,7 @@ public abstract class Board {
         value = next;
     }
 
-    public record Neighbour(int level, Cell cell){
+    public record Neighbour(int level, Cell cell) {
 
     }
 
@@ -55,7 +53,7 @@ public abstract class Board {
         return result;
     }
 
-    abstract Cell get(int i, int j);
+    public abstract Cell get(int i, int j);
 
     public void set(int i, int j, Supplier<Cell> factory) {
         value[i][j] = factory.get().acquire(i, j);

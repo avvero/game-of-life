@@ -39,22 +39,24 @@ public class Main {
         }
         // Engine
         int sleepTime = 200;
-        display(board);
+        display(board, 0);
         Thread.sleep(sleepTime);
         while (true) {
+            long start = System.currentTimeMillis();
             board.nextCycle();
-            display(board);
-            Thread.sleep(sleepTime);
+            long cycleTime = System.currentTimeMillis() - start;
+            display(board, cycleTime);
+            Thread.sleep(sleepTime - cycleTime);
         }
     }
 
-    private static void display(Board board) {
-        String payload = toString(board.value());
+    private static void display(Board board, long cycleTime) {
+        String payload = toString(board.value(), cycleTime);
         clear();
         System.out.println(payload);
     }
 
-    public static String toString(Cell[][] board) {
+    public static String toString(Cell[][] board, long cycleTime) {
         StringBuilder sb = new StringBuilder();
         sb.append("--".repeat(board[0].length));
         sb.append("\n");
@@ -72,7 +74,7 @@ public class Main {
             }
             sb.append("\n");
         }
-        sb.append("--".repeat(board[0].length));
+        sb.append("--".repeat(board[0].length) + cycleTime);
         return sb.toString();
     }
 
