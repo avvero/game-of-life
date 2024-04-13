@@ -1,6 +1,6 @@
 package pw.avvero.board;
 
-public class BoardBordered extends Board {
+public class BoardBordered<T> extends Board<T> {
 
     public BoardBordered(int x, int y) {
         super(x, y);
@@ -13,7 +13,7 @@ public class BoardBordered extends Board {
     }
 
     @Override
-    public Cell get(int i, int j) {
+    public Cell<T> get(int i, int j) {
         return value[i][j];
     }
 
@@ -22,7 +22,7 @@ public class BoardBordered extends Board {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < value.length; i++) {
             for (int j = 0; j < value[i].length; j++) {
-                Cell cell = value[i][j];
+                Cell<T> cell = value[i][j];
 //                String c = switch (cell.value()) { // ■ ◼ ⬛ ■ ▦ ⬛ ⛶ ⬜
 //                    case (1) -> "" + cell.toString() + "";
 //                    case (3) -> "" + cell.toString() + "";

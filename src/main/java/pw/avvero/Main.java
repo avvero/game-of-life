@@ -20,47 +20,49 @@ public class Main {
         int y = Integer.parseInt(args[1]);
         String mode = args[2];
         //
-        Board board = new BoardBordered(x, y);
+        Board<Integer> board = new BoardBordered<>(x, y);
         board.nextCycle((current, list) -> () -> current.value = 0);
         board.nextCycle((current, list) -> () -> {
             if (ThreadLocalRandom.current().nextBoolean()) {
                 current.value = 1;
             }
         });
+        Render<Integer> render = new Render<>() {
+            @Override
+            public String draw(Integer value) {
+                return switch (value) { // ■ ◼ ⬛ ■ ▦ ⬛ ⛶ ⬜
+                    case (1) -> "\033[31m⬜\033[0m";
+                    default -> "  ";
+                };
+            }
+        };
         // Engine
         int sleepTime = 200;
-        display(board, 0);
+        display(board, render, 0);
         Thread.sleep(sleepTime);
         while (true) {
             long start = System.currentTimeMillis();
             board.nextCycle(new GameOfLife());
             long cycleTime = System.currentTimeMillis() - start;
-            display(board, cycleTime);
+            display(board, render, cycleTime);
             Thread.sleep(sleepTime - cycleTime);
         }
     }
 
-    private static void display(Board board, long cycleTime) {
-        String payload = toString(board.value(), cycleTime);
+    private static <T> void display(Board<T> board, Render<T> render, long cycleTime) {
+        String payload = toString(board.value(), render, cycleTime);
         clear();
         System.out.println(payload);
     }
 
-    public static String toString(Cell<Integer>[][] board, long cycleTime) {
+    public static <T> String toString(Cell<T>[][] board, Render<T> render, long cycleTime) {
         StringBuilder sb = new StringBuilder();
         sb.append("--".repeat(board[0].length));
         sb.append("\n");
         for (int i = 0; i < board.length; i++) {
             for (int j = 0; j < board[i].length; j++) {
-                Cell<Integer> cell = board[i][j];
-                String c = switch (cell.value) { // ■ ◼ ⬛ ■ ▦ ⬛ ⛶ ⬜
-                    case (1) -> "\033[31m⬜\033[0m";
-//                    case (3) -> "\033[34m" + cell.getRole().sign() + "\033[0m";
-                    case (2) -> " *"; // < ! \
-                    case (4) -> " @";
-                    default -> "  ";
-                };
-                sb.append(c);
+                Cell<T> cell = board[i][j];
+                sb.append(render.draw(cell.value));
             }
             sb.append("\n");
         }

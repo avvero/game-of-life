@@ -55,7 +55,7 @@ public abstract class Board<T> {
             for (int y = -1; y <= 1; y++) {
                 if (x == 0 && y == 0) continue;
                 if (exists(i + x, j + y)) {
-                    result.add(new Neighbour<T>(max(abs(x), abs(y)), get(i + x, j + y)));
+                    result.add(new Neighbour<>(max(abs(x), abs(y)), get(i + x, j + y)));
                 }
             }
         }

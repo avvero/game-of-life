@@ -1,7 +1,6 @@
 package pw.avvero.gol;
 
 import pw.avvero.State;
-import pw.avvero.board.Board;
 import pw.avvero.board.Board.Neighbour;
 import pw.avvero.board.Cell;
 
