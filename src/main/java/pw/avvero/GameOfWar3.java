@@ -22,35 +22,48 @@ public class GameOfWar3 implements State {
                 .map(Board.Neighbour::cell)
                 .toList()
                 .stream().collect(groupingBy(Cell::value, toList()));
+        Map<Integer, List<Cell>> rangeGroups = neighbours.stream()
+                .filter(neighbour -> neighbour.level() > 1)
+                .map(Board.Neighbour::cell)
+                .toList()
+                .stream().collect(groupingBy(Cell::value, toList()));
         if (current.value() != 0) {
             List<Cell> team = Optional.ofNullable(groups.get(current.value())).orElse(List.of());
             groups.remove(current.value());
+            rangeGroups.remove(current.value());
             if (groups.isEmpty()) { // no enemies
                 return current;     // current stays
             } else {
-                return encounter(current, team, groups);
+                return encounter(current, team, groups, rangeGroups);
             }
         } else {
             if (neighbours.size() >= 2) {
                 List<Cell> biggest = biggest(groups);
                 if (biggest != null && biggest.size() >= 2) { // new
 //                    return biggest.get(0).acquire(current);
-                    return Cell.of(biggest.get(0).value(), RoleFactory.get());
+                    int value = biggest.get(0).value();
+                    return Cell.of(value, RoleFactory.get());
                 }
             }
         }
         return ZERO.acquire(current); // empty
     }
 
-    private Cell encounter(Cell current, List<Cell> team, Map<Integer, List<Cell>> enemiesGroups) {
+    private Cell encounter(Cell current,
+                           List<Cell> team,
+                           Map<Integer, List<Cell>> enemiesGroups,
+                           Map<Integer, List<Cell>> rangeGroups) {
         int health = current.getRole().health();
         int defence = current.getRole().defence();
         Cell firstEnemy = null;
-        for (List<Cell> enemies : enemiesGroups.values()) {
-            for(Cell enemy : enemies) {
-                firstEnemy = firstEnemy != null ? firstEnemy : enemy;
-                int enemyMight = ThreadLocalRandom.current().nextInt(0, enemy.getRole().strength());
-                health -= calculateDamage(enemy.getRole().strength(), defence, 0.3, 10, 0);
+        for (Map<Integer, List<Cell>> group : List.of(enemiesGroups, rangeGroups)) {
+            for (List<Cell> enemies : group.values()) {
+                for(Cell enemy : enemies) {
+                    firstEnemy = firstEnemy != null ? firstEnemy : enemy;
+                    //int enemyMight = ThreadLocalRandom.current().nextInt(0, enemy.getRole().strength());
+                    health -= calculateDamage(enemy.getRole().strength(), defence, enemy.getRole().critChance(),
+                            enemy.getRole().critMultiplier(), enemy.getRole().fireDamage());
+                }
             }
         }
         if (health <= 0) {

@@ -35,10 +35,10 @@ public class Main {
         } else {
             board = new BoardBordered(x, y, new GameOfLife());
             new RandomSeed().initialize(board, 0, board.value().length, 0, board.value()[0].length, () -> ZERO);
-            new RandomSeed().initialize(board, 0, board.value().length, 0, board.value()[0].length, () -> Cell.of(1, new Cell.Role("⬛", 0, 0, 0, 0, 0, 0)));
+            new RandomSeed().initialize(board, 0, board.value().length, 0, board.value()[0].length, () -> Cell.of(1, new Cell.Role("⬛", 0, 0, 0, 0, 0, 0, 0)));
         }
         // Engine
-        int sleepTime = 100;
+        int sleepTime = 200;
         display(board);
         Thread.sleep(sleepTime);
         while (true) {

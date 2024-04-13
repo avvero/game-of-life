@@ -44,8 +44,8 @@ public abstract class Board {
 
     public List<Neighbour> neighbours(int i, int j) {
         List<Neighbour> result = new ArrayList<>();
-        for (int x = -2; x < 3; x++) {
-            for (int y = -2; y < 3; y++) {
+        for (int x = -7; x < 8; x++) {
+            for (int y = -7; y < 8; y++) {
                 if (x == 0 && y == 0) continue;
                 if (exists(i + x, j + y)) {
                     result.add(new Neighbour(max(abs(x), abs(y)), get(i + x, j + y)));
