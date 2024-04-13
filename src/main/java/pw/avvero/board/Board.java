@@ -2,67 +2,68 @@ package pw.avvero.board;
 
 import pw.avvero.State;
 
-import java.util.*;
-import java.util.function.Supplier;
+import java.util.ArrayList;
+import java.util.List;
 
 import static java.lang.Math.abs;
 import static java.lang.Math.max;
 
-public abstract class Board {
+public abstract class Board<T> {
 
-    protected Cell[][] value;
-    protected Map<String, LinkedList<Cell>> claims = new HashMap<>();
-    protected State state;
+    protected Cell<T>[][] value;
+    protected List<Claim> claims;
 
-    public Board(Cell[][] value, State state) {
-        this.value = value;
-        this.state = state;
+    private record Claim(Runnable value) {
     }
 
-    public Cell[][] value() {
-        return value;
+    public Board(int x, int y) {
+        this.value = new Cell[x][y];
+        for (int i = 0; i < x; i++) {
+            for (int j = 0; j < y; j++) {
+                this.value[i][j] = new Cell<T>();
+            }
+        }
+        this.claims = new ArrayList<>(value.length * value[0].length);
     }
 
     abstract boolean exists(int i, int j);
 
-    public void nextCycle() {
-        Cell[][] next = new Cell[value.length][value[0].length];
-        Map<String, LinkedList<Cell>> nextClaims = new HashMap<>();
+    public void nextCycle(State<T> state) {
         for (int i = 0; i < value.length; i++) {
             for (int j = 0; j < value[i].length; j++) {
-                List<Neighbour> neighbours = neighbours(i, j);
-                next[i][j] = state.calculate(value[i][j], neighbours, claims, nextClaims).nextCycle();
+                List<Neighbour<T>> neighbours = neighbours(i, j);
+                Cell<T> cell = value[i][j];
+                Runnable claimValue = state.calculate(cell, neighbours);
+                if (claimValue != null) {
+                    claims.add(new Claim(claimValue));
+                }
             }
         }
-        value = next;
-        for (Map.Entry<String, LinkedList<Cell>> entry : claims.entrySet()) {
-            if (!entry.getValue().isEmpty()) {
-                throw new UnsupportedOperationException();
-            }
+        for (Claim claim : claims) {
+            claim.value.run();
         }
-        claims = nextClaims;
+        claims = new ArrayList<>();
     }
 
-    public record Neighbour(int level, Cell cell) {
+    public record Neighbour<T>(int level, Cell<T> cell) {
 
     }
 
-    public List<Neighbour> neighbours(int i, int j) {
-        List<Neighbour> result = new ArrayList<>();
+    public List<Neighbour<T>> neighbours(int i, int j) {
+        List<Neighbour<T>> result = new ArrayList<>();
         for (int x = -1; x <= 1; x++) {
             for (int y = -1; y <= 1; y++) {
                 if (x == 0 && y == 0) continue;
                 if (exists(i + x, j + y)) {
-                    result.add(new Neighbour(max(abs(x), abs(y)), get(i + x, j + y)));
+                    result.add(new Neighbour<T>(max(abs(x), abs(y)), get(i + x, j + y)));
                 }
             }
         }
         return result;
     }
 
-    public abstract Cell get(int i, int j);
-
-    public void set(int i, int j, Supplier<Cell> factory) {
-        value[i][j] = factory.get().acquire(i, j);
+    public abstract Cell<T> get(int i, int j);
+    public Cell<T>[][] value() {
+        return value;
     }
 }

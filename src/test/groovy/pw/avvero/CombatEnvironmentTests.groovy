@@ -3,11 +3,9 @@ package pw.avvero
 import pw.avvero.board.BoardBordered
 import pw.avvero.board.Cell
 import pw.avvero.seed.DirectSeed
-import pw.avvero.seed.RoleFactory
+
 import spock.lang.Specification
 import spock.lang.Unroll
-
-import static pw.avvero.board.Cell.zero
 
 class CombatEnvironmentTests extends Specification {
 
