@@ -7,7 +7,7 @@ import pw.avvero.seed.RoleFactory
 import spock.lang.Specification
 import spock.lang.Unroll
 
-import static pw.avvero.board.Cell.ZERO
+import static pw.avvero.board.Cell.zero
 
 class CombatEnvironmentTests extends Specification {
 
@@ -22,7 +22,7 @@ class CombatEnvironmentTests extends Specification {
     def "Test"() {
         when:
         def board = new BoardBordered(8, 8, new NoopState())
-        new DirectSeed().initialize(board, 0, board.value().length, 0, board.value()[0].length, () -> ZERO)
+        new DirectSeed().initialize(board, 0, board.value().length, 0, board.value()[0].length, () -> zero())
         board.set(0, 2, () -> Cell.of(2, RoleFactory.FGTR))
         board.set(0, 3, () -> Cell.of(2, RoleFactory.TANK))
         board.set(0, 4, () -> Cell.of(2, RoleFactory.RANG))

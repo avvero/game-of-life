@@ -14,7 +14,7 @@ public class RandomSeed implements Seed {
                 if (ThreadLocalRandom.current().nextBoolean()) {
                     board.set(i, j, factory);
                 } else {
-                    board.set(i, j, () -> Cell.ZERO);
+                    board.set(i, j, () -> Cell.zero());
                 }
             }
         }

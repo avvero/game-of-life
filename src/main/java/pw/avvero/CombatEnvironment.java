@@ -10,6 +10,7 @@ import java.util.Map;
 
 public class CombatEnvironment {
 
+    public List<Cell> fields = new ArrayList<>();
     public List<Cell> closeTeam = new ArrayList<>();
     public List<Neighbour> rangeTeam = new ArrayList<>();
     public Map<Integer, List<Cell>> closeEnemyGroups = new HashMap<>();
@@ -19,6 +20,12 @@ public class CombatEnvironment {
     public static CombatEnvironment calculate(Cell current, List<Neighbour> neighbours) {
         CombatEnvironment combatEnvironment = new CombatEnvironment();
         for (Neighbour neighbour : neighbours) {
+            if (neighbour.cell().value() == 0) {
+                if (neighbour.level() == 1) {
+                    combatEnvironment.fields.add(neighbour.cell());
+                }
+                continue;
+            }
             if (neighbour.cell().getRole().range() >= neighbour.level()) {
                 if (current != null && current.value() == neighbour.cell().value()) {
                     if (neighbour.level() == 1) {

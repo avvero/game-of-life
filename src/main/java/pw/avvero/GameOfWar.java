@@ -3,6 +3,7 @@ package pw.avvero;
 import pw.avvero.board.Board;
 import pw.avvero.board.Cell;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -10,12 +11,12 @@ import java.util.concurrent.ThreadLocalRandom;
 
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
-import static pw.avvero.board.Cell.ZERO;
+import static pw.avvero.board.Cell.zero;
 
 public class GameOfWar implements State {
 
     @Override
-    public Cell calculate(Cell current, List<Board.Neighbour> neighbours) {
+    public Cell calculate(Cell current, List<Board.Neighbour> neighbours, Map<String, LinkedList<Cell>> claims, Map<String, LinkedList<Cell>> nextClaims) {
         Map<Integer, List<Cell>> groups = neighbours.stream()
                 .filter(neighbour -> neighbour.level() == 1)
                 .map(Board.Neighbour::cell)
@@ -37,7 +38,7 @@ public class GameOfWar implements State {
                 }
             }
         }
-        return ZERO.acquire(current); // empty
+        return zero().acquire(current); // empty
     }
 
     private Cell encounter(Cell current, List<Cell> team, Map<Integer, List<Cell>> enemies) {

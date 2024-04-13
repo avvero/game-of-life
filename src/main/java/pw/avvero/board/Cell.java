@@ -4,7 +4,10 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class Cell {
 
-    public static final Cell ZERO = new Cell(-1, -1, 0, 0, 0, new Role("  ", 0, 0, 0, 0, 0, 0, 0));
+    public static Cell zero() {
+        return new Cell(-1, -1, 0, 0, 0, new Role("  ", 0, 0, 0, 0, 0, 0, 0));
+    }
+
     private int i = -1;
     private int j = -1;
     private int value;
@@ -50,10 +53,10 @@ public class Cell {
     public Cell nextCycle() {
         int incAge = 0;//1;
         Cell next = new Cell(this.i, this.j, this.value, this.age + incAge, this.deathAge, this.role);
-        if (next.isAlive()) {
+        if (next.value() != 0 && next.isAlive()) {
             return next;
         } else {
-            return ZERO.acquire(next);
+            return zero().acquire(next);
         }
     }
 
@@ -71,6 +74,6 @@ public class Cell {
 
     @Override
     public String toString() {
-        return Integer.toString(value);
+        return "[" + i + "," + j + "]: " + value;
     }
 }

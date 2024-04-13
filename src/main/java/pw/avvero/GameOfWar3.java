@@ -2,20 +2,16 @@ package pw.avvero;
 
 import pw.avvero.board.Board;
 import pw.avvero.board.Cell;
-import pw.avvero.seed.RoleFactory;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
-
-import static java.util.stream.Collectors.groupingBy;
-import static pw.avvero.board.Cell.ZERO;
 
 public class GameOfWar3 implements State {
 
     @Override
-    public Cell calculate(Cell current, List<Board.Neighbour> neighbours) {
+    public Cell calculate(Cell current, List<Board.Neighbour> neighbours, Map<String, LinkedList<Cell>> claims, Map<String, LinkedList<Cell>> nextClaims) {
         CombatEnvironment combatEnvironment = CombatEnvironment.calculate(current, neighbours);
         if (current.value() != 0) {
             if (combatEnvironment.closeEnemyGroups.isEmpty()) { // no close enemies
@@ -26,7 +22,7 @@ public class GameOfWar3 implements State {
         } else {
             if (combatEnvironment.closeEnemyGroups.size() >= 2) {
                 Cell claim = combatEnvironment.closeEnemyGroups.entrySet().stream().findFirst().get().getValue().get(0).acquire(current); // todo first claim?
-                return calculate(claim, neighbours);
+                return calculate(claim, neighbours, claims, nextClaims);
             } else if (combatEnvironment.closeEnemyGroups.size() == 1
                     && combatEnvironment.closeEnemyGroups.entrySet().stream().findFirst().get().getValue().size() > 2
                     && combatEnvironment.enemies.size() > 3) {
@@ -42,7 +38,7 @@ public class GameOfWar3 implements State {
         int health = current.getRole().health();
         int defence = current.getRole().defence();
         Cell firstEnemy = null;
-        for(Cell enemy : combatEnvironment.enemies) {
+        for (Cell enemy : combatEnvironment.enemies) {
             health -= calculateDamage(enemy.getRole().strength(), defence, enemy.getRole().critChance(),
                     enemy.getRole().critMultiplier(), enemy.getRole().fireDamage());
             if (firstEnemy == null && health <= 0) {
