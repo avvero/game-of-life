@@ -1,7 +1,7 @@
 package pw.avvero.move;
 
 import pw.avvero.State;
-import pw.avvero.board.Board.Neighbour;
+import pw.avvero.board.Neighbour;
 import pw.avvero.board.Cell;
 
 import java.util.List;

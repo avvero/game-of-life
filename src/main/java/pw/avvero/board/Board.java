@@ -1,10 +1,9 @@
 package pw.avvero.board;
 
-import pw.avvero.State;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 import static java.lang.Math.abs;
 import static java.lang.Math.max;
@@ -17,11 +16,11 @@ public abstract class Board<T> {
     private record Claim(Runnable value) {
     }
 
-    public Board(int x, int y) {
+    public Board(int x, int y, Supplier<Cell<T>> factory) {
         this.value = new Cell[x][y];
         for (int i = 0; i < x; i++) {
             for (int j = 0; j < y; j++) {
-                this.value[i][j] = new Cell<T>();
+                this.value[i][j] = factory.get();
             }
         }
         this.claims = new ArrayList<>(value.length * value[0].length);
@@ -29,12 +28,12 @@ public abstract class Board<T> {
 
     abstract boolean exists(int i, int j);
 
-    public void nextCycle(State<T> state) {
+    public void nextCycle() {
         for (int i = 0; i < value.length; i++) {
             for (int j = 0; j < value[i].length; j++) {
                 List<Neighbour<T>> neighbours = neighbours(i, j);
                 Cell<T> cell = value[i][j];
-                Runnable claimValue = state.calculate(cell, neighbours);
+                Runnable claimValue = cell.nextState(neighbours);
                 if (claimValue != null) {
                     claims.add(new Claim(claimValue));
                 }
@@ -47,10 +46,6 @@ public abstract class Board<T> {
             // 0 2 1 0 0
         }
         claims = new ArrayList<>();
-    }
-
-    public record Neighbour<T>(int level, Cell<T> cell) {
-
     }
 
     public List<Neighbour<T>> neighbours(int i, int j) {

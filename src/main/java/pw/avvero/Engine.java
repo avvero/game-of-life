@@ -4,15 +4,14 @@ import pw.avvero.board.Board;
 import pw.avvero.board.Cell;
 
 import java.io.IOException;
-import java.util.function.Supplier;
 
 public class Engine<T> {
-    public void run(Board<T> board, Supplier<State<T>> stateFactory, Render<T> render, int sleepTime) throws InterruptedException {
+    public void run(Board<T> board, Render<T> render, int sleepTime) throws InterruptedException {
         display(board, render, 0);
         Thread.sleep(sleepTime);
         while (true) {
             long start = System.currentTimeMillis();
-            board.nextCycle(stateFactory.get());
+            board.nextCycle();
             long cycleTime = System.currentTimeMillis() - start;
             display(board, render, cycleTime);
             Thread.sleep(sleepTime - cycleTime);

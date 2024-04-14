@@ -1,9 +1,11 @@
 package pw.avvero.board;
 
+import java.util.function.Supplier;
+
 public class BoardBordered<T> extends Board<T> {
 
-    public BoardBordered(int x, int y) {
-        super(x, y);
+    public BoardBordered(int x, int y, Supplier<Cell<T>> factory) {
+        super(x, y, factory);
     }
 
     @Override
