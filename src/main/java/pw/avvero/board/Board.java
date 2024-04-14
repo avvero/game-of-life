@@ -33,12 +33,15 @@ public abstract class Board<T> {
     public void nextCycle() {
         for (int i = 0; i < value.length; i++) {
             for (int j = 0; j < value[i].length; j++) {
-                List<Neighbour<T>> neighbours = neighbours(i, j);
-                Cell<T> cell = value[i][j];
-                Runnable claimValue = cell.nextState(neighbours);
-                if (claimValue != null) {
-                    claims.add(new Claim(claimValue));
-                }
+                int finalI = i, finalJ = j;
+                Thread.ofVirtual().start(() -> {
+                    List<Neighbour<T>> neighbours = neighbours(finalI, finalJ);
+                    Cell<T> cell = value[finalI][finalJ];
+                    Runnable claimValue = cell.nextState(neighbours);
+                    if (claimValue != null) {
+                        claims.add(new Claim(claimValue));
+                    }
+                });
             }
         }
         for (Claim claim : claims) {
