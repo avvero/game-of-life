@@ -9,14 +9,15 @@ import java.util.concurrent.ThreadLocalRandom;
 public class RandomMoveCell extends Cell<RandomMoveCell.MoveTarget> {
 
     public RandomMoveCell() {
-        super(new Immovable(){});
+        super(new Field() {
+        });
     }
 
     @Override
     public Runnable nextState(List<Neighbour<MoveTarget>> neighbours) {
         if (this instanceof Immovable) return null;
         List<Cell<MoveTarget>> fields = neighbours.stream()
-                .filter(neighbour -> neighbour.level() == 1 && neighbour.cell().value instanceof Immovable) // TODO
+                .filter(neighbour -> neighbour.level() == 1 && neighbour.cell().value instanceof Field)
                 .map(Neighbour::cell)
                 .toList();
         if (fields.isEmpty()) return null; //nowhere to go
@@ -39,6 +40,13 @@ public class RandomMoveCell extends Cell<RandomMoveCell.MoveTarget> {
 
     public interface Immovable extends MoveTarget {
 
+    }
+
+    public interface Field extends Immovable {
+
+    }
+
+    public interface Pawn extends Movable {
     }
 
 }

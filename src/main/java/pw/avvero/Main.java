@@ -6,6 +6,7 @@ import pw.avvero.gol.ConveyCell;
 import pw.avvero.move.RandomMoveCell;
 import pw.avvero.move.RandomMoveCell.Movable;
 import pw.avvero.move.RandomMoveCell.MoveTarget;
+import pw.avvero.move.RandomMoveCell.Pawn;
 
 
 public class Main {
@@ -22,10 +23,10 @@ public class Main {
         switch (mode) {
             case "randmove": {
                 Board<MoveTarget> board = new BoardBordered<>(x, y, RandomMoveCell::new);
-                board.update(2, 0, (current) -> current.value = new Movable(){});
-                board.update(2, 1, (current) -> current.value = new Movable(){});
-                board.update(2, y - 1, (current) -> current.value = new Movable(){});
-                board.update(2, y - 2, (current) -> current.value = new Movable(){});
+                board.update(2, 0, (current) -> current.value = new Pawn(){});
+                board.update(2, 1, (current) -> current.value = new Pawn(){});
+                board.update(2, y - 1, (current) -> current.value = new Pawn(){});
+                board.update(2, y - 2, (current) -> current.value = new Pawn(){});
                 // ■ ◼ ⬛ ■ ▦ ⬛ ⛶ ⬜
                 Render<MoveTarget> render = value -> value instanceof Movable ? "\033[31m⬜\033[0m" : "  ";
                 new Engine<MoveTarget>().run(board, render, 200);
