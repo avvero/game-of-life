@@ -4,11 +4,10 @@ import pw.avvero.board.Cell;
 import pw.avvero.board.Neighbour;
 
 import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
 
-public class RandomMoveCell extends Cell<MoveTarget> {
+public class FirstAvailableMoveCell extends Cell<MoveTarget> {
 
-    public RandomMoveCell(MoveTarget value) {
+    public FirstAvailableMoveCell(MoveTarget value) {
         super(value);
     }
 
@@ -21,12 +20,11 @@ public class RandomMoveCell extends Cell<MoveTarget> {
                 .map(Neighbour::cell)
                 .toList();
         if (fields.isEmpty()) return null; //nowhere to go
-        int id = ThreadLocalRandom.current().nextInt(fields.size());
-        Cell<MoveTarget> destination = fields.get(id);
+        Cell<MoveTarget> destination = fields.get(0);
         return () -> {
-            MoveTarget old = destination.value;
+            MoveTarget destinationValue = destination.value;
             destination.value = this.value;
-            this.value = old;
+            this.value = destinationValue;
         };
     }
 
