@@ -4,6 +4,10 @@ import pw.avvero.board.Board;
 import pw.avvero.board.BoardBordered;
 import pw.avvero.gol.GameOfLife;
 import pw.avvero.move.RandomMove;
+import pw.avvero.move.RandomMoveAbstract;
+import pw.avvero.move.RandomMoveAbstract.Immovable;
+import pw.avvero.move.RandomMoveAbstract.Movable;
+import pw.avvero.move.RandomMoveAbstract.MoveTarget;
 
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -26,7 +30,18 @@ public class Main {
                 board.update(2, 0, (current) -> current.value = 1);
                 // ■ ◼ ⬛ ■ ▦ ⬛ ⛶ ⬜
                 Render<Integer> render = value -> value == 1 ? "\033[31m⬜\033[0m" : "  ";
-                new Engine().run(board, RandomMove::new, render, 200);
+                new Engine<Integer>().run(board, RandomMove::new, render, 200);
+                break;
+            }
+            case "randmovea": {
+                Board<MoveTarget> board = new BoardBordered<>(x, y);
+                board.nextCycle((current, list) -> () -> {
+                    current.value = new Immovable(){};
+                });
+                board.update(2, 0, (current) -> current.value = new Movable(){});
+                // ■ ◼ ⬛ ■ ▦ ⬛ ⛶ ⬜
+                Render<MoveTarget> render = value -> value instanceof Movable ? "\033[31m⬜\033[0m" : "  ";
+                new Engine<MoveTarget>().run(board, RandomMoveAbstract::new, render, 200);
                 break;
             }
             default: {
@@ -39,7 +54,7 @@ public class Main {
                 });
                 // ■ ◼ ⬛ ■ ▦ ⬛ ⛶ ⬜
                 Render<Integer> render = value -> value == 1 ? "\033[31m⬜\033[0m" : "  ";
-                new Engine().run(board, GameOfLife::new, render, 200);
+                new Engine<Integer>().run(board, GameOfLife::new, render, 200);
                 break;
             }
         }
