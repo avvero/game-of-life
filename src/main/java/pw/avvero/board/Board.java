@@ -3,6 +3,7 @@ package pw.avvero.board;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -65,11 +66,23 @@ public abstract class Board<T> {
             if (level > 0) {
                 result.add(new Neighbour<>(level, get(ti, tj), path));
             }
-            //
-            for (int x = -1; x <= 1; x++) { // Moore neighborhood
-                for (int y = -1; y <= 1; y++) {
-                    if (x == 0 && y == 0) continue; // current
-                    int ni = ti + x, nj = tj + y;
+            // Moore neighborhood
+            if (ThreadLocalRandom.current().nextBoolean()) {
+                for (int x = -1; x <= 1; x++) {
+                    for (int y = -1; y <= 1; y++) {
+                        if (x == 0 && y == 0) continue; // current
+                        int ni = ti + x, nj = tj + y;
+                        if (exists(ni, nj) && !visited[ni][nj]) {
+                            ArrayList<Cell<T>> subpath = new ArrayList<>(path);
+                            subpath.add(get(ni, nj));
+                            tovisit.add(new Object[]{level + 1, ni, nj, subpath});
+                        }
+                    }
+                }
+            } else {
+                // Von Neumann neighborhood
+                for (int[] position : List.of(new int[]{ti - 1, tj}, new int[]{ti + 1, tj}, new int[]{ti, tj - 1}, new int[]{ti, tj + 1})) {
+                    int ni = position[0], nj = position[1];
                     if (exists(ni, nj) && !visited[ni][nj]) {
                         ArrayList<Cell<T>> subpath = new ArrayList<>(path);
                         subpath.add(get(ni, nj));

@@ -29,11 +29,14 @@ public class FirstAvailableEnemyMoveCell extends Cell<MoveTarget> {
     }
 
     private Neighbour<MoveTarget> findClosesEnemy(List<Neighbour<MoveTarget>> neighbours) {
+        Neighbour<MoveTarget> enemy = null;
         for (Neighbour<MoveTarget> neighbour : neighbours) {
             if (neighbour.cell().value != null && neighbour.cell().value instanceof Pawn) {
-                return neighbour;
+                if (enemy == null || enemy.level() > neighbour.level()) {
+                    enemy = neighbour;
+                }
             }
         }
-        return null;
+        return enemy;
     }
 }
