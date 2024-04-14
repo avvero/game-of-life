@@ -66,7 +66,7 @@ public abstract class Board<T> {
                 result.add(new Neighbour<>(level, get(ti, tj), path));
             }
             //
-            for (int x = -1; x <= 1; x++) {
+            for (int x = -1; x <= 1; x++) { // Moore neighborhood
                 for (int y = -1; y <= 1; y++) {
                     if (x == 0 && y == 0) continue; // current
                     int ni = ti + x, nj = tj + y;

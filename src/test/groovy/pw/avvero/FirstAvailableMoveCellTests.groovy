@@ -54,8 +54,8 @@ class FirstAvailableMoveCellTests extends Specification {
         when:
         board.nextCycle()
         then:
-        BoardTestDisplay.toString(board, render()) == trim("""200
-                                                              100
+        BoardTestDisplay.toString(board, render()) == trim("""100
+                                                              200
                                                               000""")
     }
 

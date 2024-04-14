@@ -21,6 +21,6 @@ public class FirstAvailableMoveCell extends Cell<MoveTarget> {
                 .map(Neighbour::cell)
                 .toList();
         if (fields.isEmpty()) return null; //nowhere to go
-        return () -> new Flip().accept(this, fields.getFirst());
+        return () -> new FirstWin().accept(this, fields.getFirst());
     }
 }
