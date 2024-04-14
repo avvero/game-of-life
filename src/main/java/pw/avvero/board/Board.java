@@ -4,6 +4,8 @@ import pw.avvero.State;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 import static java.lang.Math.abs;
 import static java.lang.Math.max;
@@ -63,6 +65,11 @@ public abstract class Board<T> {
     }
 
     public abstract Cell<T> get(int i, int j);
+
+    public void update(int i, int j, Consumer<Cell<T>> consumer) {
+        consumer.accept(value[i][j]);
+    }
+
     public Cell<T>[][] value() {
         return value;
     }
