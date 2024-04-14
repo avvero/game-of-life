@@ -42,6 +42,9 @@ public abstract class Board<T> {
         }
         for (Claim claim : claims) {
             claim.value.run();
+            // There is no conflict solving, so flip is possible. But we should consider it as a blink mechanic!
+            // 0 1 0 2 0
+            // 0 2 1 0 0
         }
         claims = new ArrayList<>();
     }

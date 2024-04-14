@@ -25,9 +25,7 @@ public class Main {
         switch (mode) {
             case "randmove": {
                 Board<MoveTarget> board = new BoardBordered<>(x, y);
-                board.nextCycle((current, list) -> () -> {
-                    current.value = new Immovable(){};
-                });
+                board.nextCycle((current, list) -> () -> current.value = new Immovable(){});
                 board.update(2, 0, (current) -> current.value = new Movable(){});
                 board.update(2, 1, (current) -> current.value = new Movable(){});
                 board.update(2, y - 1, (current) -> current.value = new Movable(){});
