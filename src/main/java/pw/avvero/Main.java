@@ -32,12 +32,6 @@ public class Main {
                     if (cell.value instanceof Pawn) {
                         return "\033[31m " + ((Pawn) cell.value).id + "\033[0m";
                     }
-                    if (cell.value instanceof Footprint<?>) {
-                        return "\033[31m .\033[0m";
-                    }
-                    if (cell.value instanceof Flag flag) {
-                        return "\033[31m " + flag.value + "\033[0m";
-                    }
                     return " ";
 //                    return (cell.id < 10 ? " " : "") + cell.id;
                 };
