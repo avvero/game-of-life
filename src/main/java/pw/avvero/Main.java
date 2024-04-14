@@ -26,7 +26,7 @@ public class Main {
                 AtomicInteger ids = new AtomicInteger(1);
                 board.update(0, 0, (current) -> current.value = new Pawn(ids.getAndIncrement()));
                 board.update(0, y - 1, (current) -> current.value = new Pawn(ids.getAndIncrement()));
-                board.update(x - 1, 0, (current) -> current.value = new Pawn(ids.getAndIncrement()));
+                board.update(x - 1, 5, (current) -> current.value = new Pawn(ids.getAndIncrement()));
                 board.update(x - 1, y - 1, (current) -> current.value = new Pawn(ids.getAndIncrement()));
                 // ■ ◼ ⬛ ■ ▦ ⬛ ⛶ ⬜
                 Render<Cell<MoveTarget>> render = cell -> {

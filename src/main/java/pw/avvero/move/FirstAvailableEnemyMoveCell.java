@@ -17,8 +17,15 @@ public class FirstAvailableEnemyMoveCell extends Cell<MoveTarget> {
         if (this.value == null) return null;
 
         Neighbour<MoveTarget> enemy = findClosesEnemy(findNeighbour.apply(i, j));
-        if (enemy == null || enemy.level() == 1) return null;
-        return () -> new FirstWin().accept(this, enemy.path().get(0));
+        if (enemy == null) return null;
+        if (enemy.level() > 1) {
+            return () -> new FirstWin().accept(this, enemy.path().get(0));
+        } else {
+            return () -> {
+                if (this.value == null) return; // killed already
+                enemy.path().get(0).value = null; // do kill
+            };
+        }
     }
 
     private Neighbour<MoveTarget> findClosesEnemy(List<Neighbour<MoveTarget>> neighbours) {

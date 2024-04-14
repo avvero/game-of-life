@@ -32,6 +32,13 @@ class FirstAvailableEnemyMoveCellTests extends Specification {
                                                               0100
                                                               0020
                                                               0000""")
+        when:
+        board.nextCycle()
+        then:
+        BoardTestDisplay.toString(board, render()) == trim("""0000
+                                                              0100
+                                                              0000
+                                                              0000""")
     }
 
     Render render() {
