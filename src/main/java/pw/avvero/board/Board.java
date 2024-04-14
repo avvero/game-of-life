@@ -1,15 +1,15 @@
 package pw.avvero.board;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-import static java.lang.Math.abs;
-import static java.lang.Math.max;
-
 public abstract class Board<T> {
 
+    protected int x;
+    protected int y;
     protected Cell<T>[][] value;
     protected List<Claim> claims;
 
@@ -17,6 +17,8 @@ public abstract class Board<T> {
     }
 
     public Board(int x, int y, Supplier<Cell<T>> factory) {
+        this.x = x;
+        this.y = y;
         this.value = new Cell[x][y];
         for (int i = 0; i < x; i++) {
             for (int j = 0; j < y; j++) {
@@ -50,11 +52,30 @@ public abstract class Board<T> {
 
     public List<Neighbour<T>> neighbours(int i, int j) {
         List<Neighbour<T>> result = new ArrayList<>();
-        for (int x = -1; x <= 1; x++) {
-            for (int y = -1; y <= 1; y++) {
-                if (x == 0 && y == 0) continue;
-                if (exists(i + x, j + y)) {
-                    result.add(new Neighbour<>(max(abs(x), abs(y)), get(i + x, j + y)));
+        //
+        boolean[][] visited = new boolean[x][y];
+        LinkedList<Object[]> tovisit = new LinkedList<>();
+        tovisit.add(new Object[]{0, i, j, new ArrayList<>()});
+        while (!tovisit.isEmpty()) {
+            Object[] target = tovisit.removeFirst();
+            int level = (Integer) target[0], ti = (Integer) target[1], tj = (Integer) target[2];
+            List<Cell<T>> path = (List<Cell<T>>) target[3];
+            //
+            if (visited[ti][tj]) continue;
+            visited[ti][tj] = true;
+            if (level > 0) {
+                result.add(new Neighbour<>(level, get(ti, tj), path));
+            }
+            //
+            for (int x = -1; x <= 1; x++) {
+                for (int y = -1; y <= 1; y++) {
+                    if (x == 0 && y == 0) continue; // current
+                    int ni = ti + x, nj = tj + y;
+                    if (exists(ni, nj) && !visited[ni][nj]) {
+                        ArrayList<Cell<T>> subpath = new ArrayList<>(path);
+                        subpath.add(get(ni, nj));
+                        tovisit.add(new Object[]{level + 1, ni, nj, subpath});
+                    }
                 }
             }
         }

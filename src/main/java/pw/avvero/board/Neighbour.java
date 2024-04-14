@@ -1,5 +1,7 @@
 package pw.avvero.board;
 
-public record Neighbour<T>(int level, Cell<T> cell) {
+import java.util.List;
+
+public record Neighbour<T>(int level, Cell<T> cell, List<Cell<T>> path) {
 
 }

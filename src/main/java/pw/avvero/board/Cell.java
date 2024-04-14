@@ -15,7 +15,7 @@ public abstract class Cell<T> {
 
     @Override
     public String toString() {
-        return value != null ? value.toString() : null;
+        return value != null ? value.toString() : String.valueOf(id);
     }
 
     public abstract Runnable nextState(List<Neighbour<T>> neighbours);

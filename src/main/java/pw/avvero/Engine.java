@@ -14,7 +14,7 @@ public class Engine<T> {
             board.nextCycle();
             long cycleTime = System.currentTimeMillis() - start;
             display(board, render, cycleTime);
-            Thread.sleep(sleepTime - cycleTime);
+            Thread.sleep(Math.max(0, sleepTime - cycleTime));
         }
     }
 

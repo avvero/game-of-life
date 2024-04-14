@@ -15,17 +15,21 @@ public class FirstAvailableEnemyMoveCell extends Cell<MoveTarget> {
     public Runnable nextState(List<Neighbour<MoveTarget>> neighbours) {
         if (this.value == null) return null;
 
-        List<Cell<MoveTarget>> fields = neighbours.stream()
-                .filter(neighbour -> neighbour.level() == 1 && neighbour.cell().value == null)
-                .map(Neighbour::cell)
-                .toList();
-        if (fields.isEmpty()) return null; //nowhere to go
-        Cell<MoveTarget> destination = fields.get(0);
+        Neighbour<MoveTarget> enemy = findClosesEnemy(neighbours);
+        if (enemy == null) return null;
         return () -> {
-            MoveTarget destinationValue = destination.value;
+            Cell<MoveTarget> destination = enemy.path().get(0);
             destination.value = this.value;
-            this.value = destinationValue;
+            this.value = null;
         };
     }
 
+    private Neighbour<MoveTarget> findClosesEnemy(List<Neighbour<MoveTarget>> neighbours) {
+        for (Neighbour<MoveTarget> neighbour : neighbours) {
+            if (neighbour.cell().value != null && neighbour.cell().value instanceof Pawn) {
+                return neighbour;
+            }
+        }
+        return null;
+    }
 }

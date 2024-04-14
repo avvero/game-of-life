@@ -60,13 +60,14 @@ class FirstAvailableMoveCellTests extends Specification {
     }
 
     Render render() {
-        return new Render() {
+        return new Render<Cell>() {
             @Override
-            String draw(Object value) {
-                if (value instanceof Pawn) {
-                    return value.id
+            String draw(Cell cell) {
+                if (cell.value instanceof Pawn) {
+                    return cell.value.id
                 }
-                return "0"
+                return "0";
+//                return (cell.id < 10 ? "_" : "") + cell.id;
             }
         }
     }

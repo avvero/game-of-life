@@ -7,4 +7,9 @@ public class Pawn implements Movable {
     public Pawn(Integer id) {
         this.id = id;
     }
+
+    @Override
+    public String toString() {
+        return "Pawn{"+ id +'}';
+    }
 }
