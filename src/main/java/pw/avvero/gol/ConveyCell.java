@@ -9,7 +9,7 @@ import java.util.concurrent.ThreadLocalRandom;
 public class ConveyCell extends Cell<Integer> {
 
     public ConveyCell() {
-        this.value = ThreadLocalRandom.current().nextBoolean() ? 1 : 0;
+        super(ThreadLocalRandom.current().nextBoolean() ? 1 : 0);
     }
 
     @Override
