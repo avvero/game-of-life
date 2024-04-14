@@ -20,7 +20,7 @@ public class Main {
         String mode = args[2];
         //
         switch (mode) {
-            case "move": {
+            case "randmove": {
                 Board<Integer> board = new BoardBordered<>(x, y);
                 board.nextCycle((current, list) -> () -> current.value = 0);
                 board.update(2, 0, (current) -> current.value = 1);
