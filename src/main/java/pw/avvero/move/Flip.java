@@ -2,11 +2,13 @@ package pw.avvero.move;
 
 import pw.avvero.board.Cell;
 
-import java.util.function.BiFunction;
+import java.util.function.BiConsumer;
 
-public class Flip implements BiFunction<Cell<MoveTarget>, Cell<MoveTarget>, Cell<MoveTarget>> {
+public class Flip implements BiConsumer<Cell<MoveTarget>, Cell<MoveTarget>> {
     @Override
-    public Cell<MoveTarget> apply(Cell<MoveTarget> source, Cell<MoveTarget> target) {
-        return null;
+    public void accept(Cell<MoveTarget> source, Cell<MoveTarget> destination) {
+        MoveTarget destinationValue = destination.value;
+        destination.value = source.value;
+        source.value = destinationValue;
     }
 }

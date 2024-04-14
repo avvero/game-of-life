@@ -17,16 +17,10 @@ public class FirstAvailableMoveCell extends Cell<MoveTarget> {
         if (this.value == null) return null;
 
         List<Cell<MoveTarget>> fields = findNeighbour.apply(i, j).stream()
-                .filter(neighbour -> neighbour.cell().value == null)
+                .filter(neighbour -> neighbour.level() == 1 && neighbour.cell().value == null)
                 .map(Neighbour::cell)
                 .toList();
         if (fields.isEmpty()) return null; //nowhere to go
-        Cell<MoveTarget> destination = fields.get(0);
-        return () -> {
-            MoveTarget destinationValue = destination.value;
-            destination.value = this.value;
-            this.value = destinationValue;
-        };
+        return () -> new Flip().accept(this, fields.getFirst());
     }
-
 }
