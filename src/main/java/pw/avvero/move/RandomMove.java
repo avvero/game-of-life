@@ -7,21 +7,34 @@ import pw.avvero.board.Cell;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class RandomMove implements State<Integer> {
+public class RandomMove implements State<RandomMove.MoveTarget> {
 
+    public interface MoveTarget {
+
+    }
+
+    public interface Movable extends MoveTarget {
+
+    }
+
+    public interface Immovable extends MoveTarget {
+
+    }
 
     @Override
-    public Runnable calculate(Cell<Integer> current, List<Neighbour<Integer>> neighbours) {
-        if (current.value == 0) return null; // TODO
-        List<Neighbour<Integer>> fields = neighbours.stream()
-                .filter(neighbour -> neighbour.level() == 1 && neighbour.cell().value == 0) // TODO
+    public Runnable calculate(Cell<MoveTarget> current, List<Neighbour<MoveTarget>> neighbours) {
+        if (current.value instanceof Immovable) return null;
+        List<Cell<MoveTarget>> fields = neighbours.stream()
+                .filter(neighbour -> neighbour.level() == 1 && neighbour.cell().value instanceof Immovable) // TODO
+                .map(Neighbour::cell)
                 .toList();
         if (fields.isEmpty()) return null; //nowhere to go
         int id = ThreadLocalRandom.current().nextInt(fields.size());
-        Neighbour<Integer> target = fields.get(id);
+        Cell<MoveTarget> target = fields.get(id);
         return () -> {
-            target.cell().value = current.value;
-            current.value = 0; // TODO
+            MoveTarget old = target.value;
+            target.value = current.value;
+            current.value = old;
         };
     }
 }
