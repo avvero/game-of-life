@@ -1,6 +1,7 @@
 package pw.avvero.board;
 
 import java.util.List;
+import java.util.function.BiFunction;
 
 public class NoopCell<T> extends Cell<T> {
     public NoopCell(T value) {
@@ -8,7 +9,7 @@ public class NoopCell<T> extends Cell<T> {
     }
 
     @Override
-    public Runnable nextState(List<Neighbour<T>> neighbours) {
+    public Runnable nextState(Integer i, Integer j, BiFunction<Integer, Integer, List<Neighbour<T>>> findNeighbour) {
         return null;
     }
 }

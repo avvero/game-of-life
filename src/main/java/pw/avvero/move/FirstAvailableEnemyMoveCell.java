@@ -4,6 +4,7 @@ import pw.avvero.board.Cell;
 import pw.avvero.board.Neighbour;
 
 import java.util.List;
+import java.util.function.BiFunction;
 
 public class FirstAvailableEnemyMoveCell extends Cell<MoveTarget> {
 
@@ -12,10 +13,10 @@ public class FirstAvailableEnemyMoveCell extends Cell<MoveTarget> {
     }
 
     @Override
-    public Runnable nextState(List<Neighbour<MoveTarget>> neighbours) {
+    public Runnable nextState(Integer i, Integer j, BiFunction<Integer, Integer, List<Neighbour<MoveTarget>>> findNeighbour) {
         if (this.value == null) return null;
 
-        Neighbour<MoveTarget> enemy = findClosesEnemy(neighbours);
+        Neighbour<MoveTarget> enemy = findClosesEnemy(findNeighbour.apply(i, j));
         if (enemy == null) return null;
         return () -> {
             Cell<MoveTarget> destination = enemy.path().get(0);

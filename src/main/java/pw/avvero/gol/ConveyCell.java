@@ -5,6 +5,7 @@ import pw.avvero.board.Neighbour;
 
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.function.BiFunction;
 
 public class ConveyCell extends Cell<Integer> {
 
@@ -13,8 +14,8 @@ public class ConveyCell extends Cell<Integer> {
     }
 
     @Override
-    public Runnable nextState(List<Neighbour<Integer>> neighbours) {
-        int n = neighbours.stream().filter(neighbour -> neighbour.level() == 1 && neighbour.cell().value == 1).toList().size();
+    public Runnable nextState(Integer i, Integer j, BiFunction<Integer, Integer, List<Neighbour<Integer>>> findNeighbour) {
+        int n = findNeighbour.apply(i, j).stream().filter(neighbour -> neighbour.cell().value == 1).toList().size();
         if (value != 0 && (n == 2 || n == 3)) {
             return null;
         } else if (n == 3) {

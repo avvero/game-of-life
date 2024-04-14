@@ -2,6 +2,7 @@ package pw.avvero.board;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.BiFunction;
 
 public abstract class Cell<T> {
 
@@ -18,5 +19,5 @@ public abstract class Cell<T> {
         return value != null ? value.toString() : String.valueOf(id);
     }
 
-    public abstract Runnable nextState(List<Neighbour<T>> neighbours);
+    public abstract Runnable nextState(Integer i, Integer j, BiFunction<Integer, Integer, List<Neighbour<T>>> findNeighbour);
 }
