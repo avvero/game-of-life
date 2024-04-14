@@ -21,18 +21,36 @@ public class Main {
         String mode = args[2];
         //
         switch (mode) {
+            case "enemy": {
+                Board<MoveTarget> board = new BoardBordered<>(x, y, () -> new FirstAvailableEnemyMoveCell(null));
+                AtomicInteger ids = new AtomicInteger(1);
+                board.update(0, 0, (current) -> current.value = new Pawn(ids.getAndIncrement()));
+                board.update(0, y - 1, (current) -> current.value = new Pawn(ids.getAndIncrement()));
+                board.update(x - 1, 0, (current) -> current.value = new Pawn(ids.getAndIncrement()));
+                board.update(x - 1, y - 1, (current) -> current.value = new Pawn(ids.getAndIncrement()));
+                // ■ ◼ ⬛ ■ ▦ ⬛ ⛶ ⬜
+                Render<Cell<MoveTarget>> render = cell -> {
+                    if (cell.value instanceof Pawn) {
+                        return "\033[31m " + ((Pawn) cell.value).id + "\033[0m";
+                    }
+                    return "  ";
+//                    return (cell.id < 10 ? " " : "") + cell.id;
+                };
+                new Engine<MoveTarget>().run(board, render, 200);
+                break;
+            }
             case "randmove": {
                 Board<MoveTarget> board = new BoardBordered<>(x, y, () -> new RandomMoveCell(null));
                 AtomicInteger ids = new AtomicInteger(1);
-                for (int i = 0; i < x / 2; i++) {
-                    board.update(i, y - 1, (current) -> current.value = new Pawn(ids.getAndIncrement()));
+                for (int i = 0; i < x; i++) {
+                    board.update(i, y / 2, (current) -> current.value = new Pawn(ids.getAndIncrement()));
                 }
                 // ■ ◼ ⬛ ■ ▦ ⬛ ⛶ ⬜
                 Render<Cell<MoveTarget>> render = cell -> {
                     if (cell.value instanceof Pawn) {
                         return "\033[31m " + ((Pawn) cell.value).id + "\033[0m";
                     }
-                    return " ";
+                    return "  ";
 //                    return (cell.id < 10 ? " " : "") + cell.id;
                 };
                 new Engine<MoveTarget>().run(board, render, 200);

@@ -8,7 +8,7 @@ import java.io.IOException;
 public class Engine<T> {
     public void run(Board<T> board, Render<Cell<T>> render, int sleepTime) throws InterruptedException {
         display(board, render, 0);
-        Thread.sleep(sleepTime);
+        Thread.sleep(sleepTime * 10);
         while (true) {
             long start = System.currentTimeMillis();
             board.nextCycle();

@@ -17,12 +17,8 @@ public class FirstAvailableEnemyMoveCell extends Cell<MoveTarget> {
         if (this.value == null) return null;
 
         Neighbour<MoveTarget> enemy = findClosesEnemy(findNeighbour.apply(i, j));
-        if (enemy == null) return null;
-        return () -> {
-            Cell<MoveTarget> destination = enemy.path().get(0);
-            destination.value = this.value;
-            this.value = null;
-        };
+        if (enemy == null || enemy.level() == 1) return null;
+        return () -> new FirstWin().accept(this, enemy.path().get(0));
     }
 
     private Neighbour<MoveTarget> findClosesEnemy(List<Neighbour<MoveTarget>> neighbours) {
