@@ -21,12 +21,11 @@ public class RandomMoveCell extends Cell<MoveTarget> {
                 .map(Neighbour::cell)
                 .toList();
         if (fields.isEmpty()) return null; //nowhere to go
-        int id = ThreadLocalRandom.current().nextInt(fields.size());
-        Cell<MoveTarget> destination = fields.get(id);
+        Cell<MoveTarget> destination = fields.get(ThreadLocalRandom.current().nextInt(fields.size()));
         return () -> {
-            MoveTarget old = destination.value;
+            MoveTarget destinationValue = destination.value;
             destination.value = this.value;
-            this.value = old;
+            this.value = destinationValue;
         };
     }
 

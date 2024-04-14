@@ -22,7 +22,7 @@ public class Main {
         //
         switch (mode) {
             case "randmove": {
-                Board<MoveTarget> board = new BoardBordered<>(x, y, () -> new FirstAvailableMoveCell(null));
+                Board<MoveTarget> board = new BoardBordered<>(x, y, () -> new RandomMoveCell(null));
                 AtomicInteger ids = new AtomicInteger(1);
                 for (int i = 0; i < x / 2; i++) {
                     board.update(i, y - 1, (current) -> current.value = new Pawn(ids.getAndIncrement()));
