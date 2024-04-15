@@ -1,4 +1,4 @@
-package pw.avvero.move;
+package pw.avvero.walk;
 
 import java.util.function.Predicate;
 

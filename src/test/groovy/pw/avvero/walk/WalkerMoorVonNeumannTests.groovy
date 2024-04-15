@@ -1,12 +1,11 @@
-package pw.avvero
+package pw.avvero.walk
 
+import pw.avvero.BoardTestDisplay
+import pw.avvero.Render
 import pw.avvero.board.Board
 import pw.avvero.board.BoardBordered
 import pw.avvero.board.Cell
 import pw.avvero.board.MoorVonNeumannNeighborhood
-import pw.avvero.move.Actor
-import pw.avvero.move.FootPrint
-import pw.avvero.move.WalkableCell
 import spock.lang.Specification
 import spock.lang.Unroll
 

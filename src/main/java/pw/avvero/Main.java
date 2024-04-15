@@ -3,7 +3,7 @@ package pw.avvero;
 import pw.avvero.board.Board;
 import pw.avvero.board.BoardBordered;
 import pw.avvero.board.Cell;
-import pw.avvero.gol.ConveyCell;
+import pw.avvero.convey.ConveyCell;
 import pw.avvero.move.*;
 
 import java.util.concurrent.atomic.AtomicInteger;

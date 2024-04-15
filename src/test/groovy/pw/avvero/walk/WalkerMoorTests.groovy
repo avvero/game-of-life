@@ -1,20 +1,22 @@
-package pw.avvero
+package pw.avvero.walk
 
-import pw.avvero.board.*
-import pw.avvero.move.Actor
-import pw.avvero.move.FootPrint
-import pw.avvero.move.WalkableCell
+import pw.avvero.BoardTestDisplay
+import pw.avvero.Render
+import pw.avvero.board.Board
+import pw.avvero.board.BoardBordered
+import pw.avvero.board.Cell
+import pw.avvero.board.MoorNeighborhood
 import spock.lang.Specification
 import spock.lang.Unroll
 
 import java.util.concurrent.atomic.AtomicInteger
 
-class WalkerVonNeumannTests extends Specification {
+class WalkerMoorTests extends Specification {
 
     @Unroll
-    def "Move on VonNeumannNeighborhood 1"() {
+    def "Move on MoorNeighborhood 1"() {
         when:
-        Board<Object> board = new BoardBordered<>(7, 10, new VonNeumannNeighborhood<>(), WalkableCell::new)
+        Board<Object> board = new BoardBordered<>(7, 10, new MoorNeighborhood<>(), WalkableCell::new)
         AtomicInteger ids = new AtomicInteger(1)
         def actor = new Actor(ids.getAndIncrement(), (c) -> c == "!")
         board.update(0, 0, (current) -> current.value = actor)
@@ -32,19 +34,19 @@ class WalkerVonNeumannTests extends Specification {
             board.nextCycle()
         }
         then:
-        trim(BoardTestDisplay.toString(board, render())) == trim(""". ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦
-                                                                    . ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦
-                                                                    . ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦
-                                                                    . ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦
-                                                                    . ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦
-                                                                    . ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦
-                                                                    . . . . . . . . 1 !""")
+        trim(BoardTestDisplay.toString(board, render())) == trim(""". . . . ▦ ▦ ▦ ▦ ▦ ▦
+                                                                    ▦ ▦ ▦ ▦ . ▦ ▦ ▦ ▦ ▦
+                                                                    ▦ ▦ ▦ ▦ ▦ . ▦ ▦ ▦ ▦
+                                                                    ▦ ▦ ▦ ▦ ▦ ▦ . ▦ ▦ ▦
+                                                                    ▦ ▦ ▦ ▦ ▦ ▦ ▦ . ▦ ▦
+                                                                    ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦ 1 ▦      
+                                                                    ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦ !""")
     }
 
     @Unroll
-    def "Move on VonNeumannNeighborhood 2"() {
+    def "Move on MoorNeighborhood 2"() {
         when:
-        Board<Object> board = new BoardBordered<>(7, 10, new VonNeumannNeighborhood<>(), WalkableCell::new)
+        Board<Object> board = new BoardBordered<>(7, 10, new MoorNeighborhood<>(), WalkableCell::new)
         AtomicInteger ids = new AtomicInteger(1)
         def id1 = ids.getAndIncrement()
         def id2 = ids.getAndIncrement()
@@ -65,14 +67,15 @@ class WalkerVonNeumannTests extends Specification {
             board.nextCycle()
         }
         then:
-        trim(BoardTestDisplay.toString(board, render())) == trim("""▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦
-                                                                    ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦
-                                                                    ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦
-                                                                    . ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦ 2 
-                                                                    1 ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦ .
+        trim(BoardTestDisplay.toString(board, render())) == trim("""▦ ▦ ▦ . 1 2 ▦ ▦ ▦ ▦
+                                                                    ▦ ▦ . ▦ ▦ ▦ . ▦ ▦ ▦
+                                                                    ▦ . ▦ ▦ ▦ ▦ ▦ . ▦ ▦
+                                                                    . ▦ ▦ ▦ ▦ ▦ ▦ ▦ . ▦ 
+                                                                    ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦ .
                                                                     ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦      
                                                                     ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦""")
     }
+
 
     Render render() {
         return new Render<Cell>() {

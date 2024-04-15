@@ -1,4 +1,4 @@
-package pw.avvero.move;
+package pw.avvero.walk;
 
 import pw.avvero.board.Cell;
 import pw.avvero.board.Neighbour;

@@ -1,4 +1,4 @@
-package pw.avvero.gol;
+package pw.avvero.convey;
 
 import pw.avvero.board.Cell;
 import pw.avvero.board.Neighbour;
