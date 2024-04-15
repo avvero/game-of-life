@@ -7,6 +7,9 @@ public class BoardBordered<T> extends Board<T> {
     public BoardBordered(int x, int y, Supplier<Cell<T>> factory) {
         super(x, y, factory);
     }
+    public BoardBordered(int x, int y, Neighborhood<T> neighborhood, Supplier<Cell<T>> factory) {
+        super(x, y, neighborhood, factory);
+    }
 
     @Override
     public boolean exists(int i, int j) {

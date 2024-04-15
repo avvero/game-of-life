@@ -20,7 +20,7 @@ public class VonNeumannNeighborhood<T> implements Neighborhood<T>{
             if (visited[ti][tj]) continue;
             visited[ti][tj] = true;
             if (level > 0) {
-                result.add(new Neighbour<>(level, board.get(ti, tj), path));
+                result.add(new Neighbour<>(board.get(ti, tj), path));
             }
             // Von Neumann neighborhood
             for (int[] position : List.of(new int[]{ti - 1, tj}, new int[]{ti + 1, tj}, new int[]{ti, tj - 1}, new int[]{ti, tj + 1})) {

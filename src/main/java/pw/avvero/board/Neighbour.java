@@ -2,6 +2,14 @@ package pw.avvero.board;
 
 import java.util.List;
 
-public record Neighbour<T>(int level, Cell<T> cell, List<Cell<T>> path) {
+public record Neighbour<T>(Cell<T> cell, List<Cell<T>> path) {
 
+    @Override
+    public String toString() {
+        return "[cell=" + cell + ", path=" + path + ']';
+    }
+
+    public int level() {
+        return path.size();
+    }
 }

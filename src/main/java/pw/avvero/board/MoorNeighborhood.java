@@ -21,7 +21,7 @@ public class MoorNeighborhood<T> implements Neighborhood<T> {
             if (visited[ti][tj]) continue;
             visited[ti][tj] = true;
             if (level > 0) {
-                result.add(new Neighbour<>(level, board.get(ti, tj), path));
+                result.add(new Neighbour<>(board.get(ti, tj), path));
             }
             for (int x = -1; x <= 1; x++) {
                 for (int y = -1; y <= 1; y++) {

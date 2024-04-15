@@ -4,16 +4,17 @@ import pw.avvero.board.Board
 import pw.avvero.board.BoardBordered
 import pw.avvero.board.MoorNeighborhood
 import pw.avvero.board.NoopCell
+import pw.avvero.board.VonNeumannNeighborhood
 import spock.lang.Specification
 
 import java.util.concurrent.atomic.AtomicInteger
 
-class MoorNeighborhoodTests extends Specification {
+class VonNeumannNeighborhoodTests extends Specification {
 
     def "Neighbours for 0, 0"() {
         when:
         def id = new AtomicInteger()
-        Board<Integer> board = new BoardBordered<>(3, 3, new MoorNeighborhood(), () -> new NoopCell(id.getAndIncrement()))
+        Board<Integer> board = new BoardBordered<>(3, 3, new VonNeumannNeighborhood(), () -> new NoopCell(id.getAndIncrement()))
         then:
         BoardTestDisplay.toString(board, render()) == trim("""012
                                                               345
@@ -33,7 +34,7 @@ class MoorNeighborhoodTests extends Specification {
     def "Neighbours for 2, 2"() {
         when:
         def id = new AtomicInteger()
-        Board<Integer> board = new BoardBordered<>(3, 3, new MoorNeighborhood(), () -> new NoopCell(id.getAndIncrement()))
+        Board<Integer> board = new BoardBordered<>(3, 3, new VonNeumannNeighborhood(), () -> new NoopCell(id.getAndIncrement()))
         then:
         BoardTestDisplay.toString(board, render()) == trim("""012
                                                               345
@@ -53,7 +54,7 @@ class MoorNeighborhoodTests extends Specification {
     def "Neighbours for 1, 1"() {
         when:
         def id = new AtomicInteger()
-        Board<Integer> board = new BoardBordered<>(3, 3, new MoorNeighborhood(), () -> new NoopCell(id.getAndIncrement()))
+        Board<Integer> board = new BoardBordered<>(3, 3, new VonNeumannNeighborhood(), () -> new NoopCell(id.getAndIncrement()))
         then:
         BoardTestDisplay.toString(board, render()) == trim("""012
                                                               345

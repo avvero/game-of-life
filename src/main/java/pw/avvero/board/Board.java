@@ -11,11 +11,12 @@ public abstract class Board<T> {
     protected int y;
     protected Cell<T>[][] value;
     protected List<Claim> claims;
+    private Neighborhood<T> neighborhood;
 
     private record Claim(Runnable value) {
     }
 
-    public Board(int x, int y, Supplier<Cell<T>> factory) {
+    public Board(int x, int y, Neighborhood<T> neighborhood, Supplier<Cell<T>> factory) {
         this.x = x;
         this.y = y;
         this.value = new Cell[x][y];
@@ -25,6 +26,11 @@ public abstract class Board<T> {
             }
         }
         this.claims = new ArrayList<>(value.length * value[0].length);
+        this.neighborhood = neighborhood;
+    }
+
+    public Board(int x, int y, Supplier<Cell<T>> factory) {
+        this(x, y, new MoorNeighborhood<>(), factory);
     }
 
     abstract boolean exists(int i, int j);
@@ -49,7 +55,7 @@ public abstract class Board<T> {
     }
 
     public List<Neighbour<T>> neighbours(int i, int j) {
-        return new MoorNeighborhood<T>().neighbours(this, i, j);
+        return neighborhood.neighbours(this, i, j);
     }
 
     public abstract Cell<T> get(int i, int j);
