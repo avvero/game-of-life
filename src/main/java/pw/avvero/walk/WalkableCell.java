@@ -14,7 +14,8 @@ public class WalkableCell<T> extends Cell<T> {
 
     }
 
-    public interface Walkable {}
+    public interface Walkable {
+    }
 
     public WalkableCell(T value) {
         super(value);
@@ -23,21 +24,21 @@ public class WalkableCell<T> extends Cell<T> {
     @Override
     public Runnable nextState(Integer i, Integer j, BiFunction<Integer, Integer, List<Neighbour<T>>> findNeighbour) {
         if (this.value == null) return null;
-        if (this.value instanceof WalkableCell.Walker<?> walker) {
-            Neighbour<T> neighbour = find(findNeighbour.apply(i, j), (Walker<T>) walker); //todo dirty casting
-            if (neighbour == null) return null; // can't find
-            if (neighbour.level() > 1) { // is near
-                return move(this, neighbour.path().get(0)); // move on 1 cell
-            } else {
-                return null;
-            }
+        if (!(this.value instanceof Walker)) return null;
+        //
+        WalkableCell.Walker<T> walker = (Walker<T>) this.value; //todo dirty casting
+        Neighbour<T> neighbour = find(findNeighbour.apply(i, j), walker);
+        if (neighbour == null) return null; // can't find
+        if (neighbour.level() > 1) { // is far
+            return move(this, neighbour.path().get(0)); // move on 1 cell
+        } else {
+            return null;
         }
-        return null;
     }
 
     private Runnable move(Cell<T> source, Cell<T> destination) {
         return () -> {
-            if (destination.value != null) return; // acquired already
+            if (destination.value != null && !(destination.value instanceof Walkable)) return; // acquired already
             destination.value = source.value;
             source.value = (T) new FootPrint(); // dirty
         };
