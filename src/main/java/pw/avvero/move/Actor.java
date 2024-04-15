@@ -2,7 +2,7 @@ package pw.avvero.move;
 
 import java.util.function.Predicate;
 
-public class Actor<T> implements TraversalSpaceCell.Traversal<T> {
+public class Actor<T> implements WalkableCell.Walker<T> {
 
     public final int id;
     private Predicate<T> target;

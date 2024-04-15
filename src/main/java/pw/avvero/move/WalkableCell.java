@@ -5,25 +5,26 @@ import pw.avvero.board.Neighbour;
 
 import java.util.List;
 import java.util.function.BiFunction;
-import java.util.function.Predicate;
 
-public class TraversalSpaceCell<T> extends Cell<T> {
+public class WalkableCell<T> extends Cell<T> {
 
-    public interface Traversal<T> {
+    public interface Walker<T> {
 
         boolean isTarget(T t);
 
     }
 
-    public TraversalSpaceCell(T value) {
+    public interface Walkable {}
+
+    public WalkableCell(T value) {
         super(value);
     }
 
     @Override
     public Runnable nextState(Integer i, Integer j, BiFunction<Integer, Integer, List<Neighbour<T>>> findNeighbour) {
         if (this.value == null) return null;
-        if (this.value instanceof Traversal<?> traversal) {
-            Neighbour<T> neighbour = find(findNeighbour.apply(i, j), (Traversal<T>) traversal); //todo dirty casting
+        if (this.value instanceof WalkableCell.Walker<?> walker) {
+            Neighbour<T> neighbour = find(findNeighbour.apply(i, j), (Walker<T>) walker); //todo dirty casting
             if (neighbour == null) return null; // can't find
             if (neighbour.level() > 1) { // is near
                 return move(this, neighbour.path().get(0)); // move on 1 cell
@@ -38,13 +39,13 @@ public class TraversalSpaceCell<T> extends Cell<T> {
         return () -> {
             if (destination.value != null) return; // acquired already
             destination.value = source.value;
-            source.value = (T) "."; // dirty
+            source.value = (T) new FootPrint(); // dirty
         };
     }
 
-    private Neighbour<T> find(List<Neighbour<T>> neighbours, Traversal<T> traversal) {
+    private Neighbour<T> find(List<Neighbour<T>> neighbours, Walker<T> walker) {
         for (Neighbour<T> neighbour : neighbours) {
-            if (neighbour.cell().value != null && traversal.isTarget(neighbour.cell().value)) {
+            if (neighbour.cell().value != null && walker.isTarget(neighbour.cell().value)) {
                 return neighbour;
             }
         }

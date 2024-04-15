@@ -3,20 +3,21 @@ package pw.avvero
 import pw.avvero.board.Board
 import pw.avvero.board.BoardBordered
 import pw.avvero.board.Cell
-import pw.avvero.board.MoorNeighborhood
+import pw.avvero.board.MoorVonNeumannNeighborhood
 import pw.avvero.move.Actor
-import pw.avvero.move.TraversalSpaceCell
+import pw.avvero.move.FootPrint
+import pw.avvero.move.WalkableCell
 import spock.lang.Specification
 import spock.lang.Unroll
 
 import java.util.concurrent.atomic.AtomicInteger
 
-class TraversalMoorTests extends Specification {
+class WalkerMoorVonNeumannTests extends Specification {
 
     @Unroll
-    def "Move on MoorNeighborhood 1"() {
+    def "Move on MoorVonNeumann 1"() {
         when:
-        Board<Object> board = new BoardBordered<>(7, 10, new MoorNeighborhood<>(), TraversalSpaceCell::new)
+        Board<Object> board = new BoardBordered<>(7, 10, new MoorVonNeumannNeighborhood<>(), WalkableCell::new)
         AtomicInteger ids = new AtomicInteger(1)
         def actor = new Actor(ids.getAndIncrement(), (c) -> c == "!")
         board.update(0, 0, (current) -> current.value = actor)
@@ -34,19 +35,19 @@ class TraversalMoorTests extends Specification {
             board.nextCycle()
         }
         then:
-        trim(BoardTestDisplay.toString(board, render())) == trim(""". . . . ▦ ▦ ▦ ▦ ▦ ▦
-                                                                    ▦ ▦ ▦ ▦ . ▦ ▦ ▦ ▦ ▦
-                                                                    ▦ ▦ ▦ ▦ ▦ . ▦ ▦ ▦ ▦
-                                                                    ▦ ▦ ▦ ▦ ▦ ▦ . ▦ ▦ ▦
-                                                                    ▦ ▦ ▦ ▦ ▦ ▦ ▦ . ▦ ▦
-                                                                    ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦ 1 ▦      
-                                                                    ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦ !""")
+        trim(BoardTestDisplay.toString(board, render())) == trim(""". . ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦
+                                                                    ▦ . ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦
+                                                                    ▦ . ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦
+                                                                    ▦ . ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦
+                                                                    ▦ . ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦
+                                                                    ▦ . ▦ ▦ . ▦ ▦ ▦ ▦ ▦      
+                                                                    ▦ . . . . . . . 1 !""")
     }
 
     @Unroll
-    def "Move on MoorNeighborhood 2"() {
+    def "Move on MoorVonNeumann 2"() {
         when:
-        Board<Object> board = new BoardBordered<>(7, 10, new MoorNeighborhood<>(), TraversalSpaceCell::new)
+        Board<Object> board = new BoardBordered<>(7, 10, new MoorVonNeumannNeighborhood<>(), WalkableCell::new)
         AtomicInteger ids = new AtomicInteger(1)
         def id1 = ids.getAndIncrement()
         def id2 = ids.getAndIncrement()
@@ -67,10 +68,10 @@ class TraversalMoorTests extends Specification {
             board.nextCycle()
         }
         then:
-        trim(BoardTestDisplay.toString(board, render())) == trim("""▦ ▦ ▦ . 1 2 ▦ ▦ ▦ ▦
-                                                                    ▦ ▦ . ▦ ▦ ▦ . ▦ ▦ ▦
-                                                                    ▦ . ▦ ▦ ▦ ▦ ▦ . ▦ ▦
-                                                                    . ▦ ▦ ▦ ▦ ▦ ▦ ▦ . ▦ 
+        trim(BoardTestDisplay.toString(board, render())) == trim("""▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦
+                                                                    ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦
+                                                                    ▦ . . . . 1 2 . . .
+                                                                    . . ▦ ▦ ▦ ▦ ▦ ▦ ▦ .
                                                                     ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦ .
                                                                     ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦      
                                                                     ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦""")
@@ -83,6 +84,9 @@ class TraversalMoorTests extends Specification {
             String draw(Cell cell) {
                 if (cell.value instanceof Actor) {
                     return " " + cell.value.id
+                }
+                if (cell.value instanceof FootPrint) {
+                    return " ."
                 }
                 if (cell.value == null) return " ▦"
                 return " " + cell.value.toString()
