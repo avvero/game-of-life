@@ -4,12 +4,8 @@ import pw.avvero.board.Board
 import pw.avvero.board.BoardBordered
 import pw.avvero.board.Cell
 import pw.avvero.board.MoorNeighborhood
-import pw.avvero.board.VonNeumannNeighborhood
 import pw.avvero.move.Actor
-import pw.avvero.move.FirstAvailableEnemyMoveCell
 import pw.avvero.move.TraversalSpaceCell
-import pw.avvero.move.MoveTarget
-import pw.avvero.move.Pawn
 import spock.lang.Specification
 import spock.lang.Unroll
 
@@ -34,7 +30,9 @@ class TraversalTests extends Specification {
                                                               0 0 0 0 0 0 0 0 0 0      
                                                               0 0 0 0 0 0 0 0 0 !""")
         when:
-        board.nextCycle()
+        20.times {
+            board.nextCycle()
+        }
         then:
         BoardTestDisplay.toString(board, render()) == trim("""0 0 0 0 0 0 0 0 0 0
                                                               0 0 0 0 0 0 0 0 0 0
