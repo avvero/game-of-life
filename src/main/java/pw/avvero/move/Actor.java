@@ -1,11 +1,13 @@
 package pw.avvero.move;
 
+import java.util.function.Predicate;
+
 public class Actor<T> implements TraversalSpaceCell.Traversal<T> {
 
     public final int id;
-    private T target;
+    private Predicate<T> target;
 
-    public Actor(int id, T target) {
+    public Actor(int id, Predicate<T> target) {
         this.id = id;
         this.target = target;
     }
@@ -14,6 +16,6 @@ public class Actor<T> implements TraversalSpaceCell.Traversal<T> {
     public boolean isTarget(T candidate) {
         if (candidate == null && target == null) return true;
         if (candidate == null) return false;
-        return candidate.equals(target);
+        return target.test(candidate);
     }
 }

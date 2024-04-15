@@ -5,6 +5,7 @@ import pw.avvero.board.Neighbour;
 
 import java.util.List;
 import java.util.function.BiFunction;
+import java.util.function.Predicate;
 
 public class TraversalSpaceCell<T> extends Cell<T> {
 
@@ -21,8 +22,8 @@ public class TraversalSpaceCell<T> extends Cell<T> {
     @Override
     public Runnable nextState(Integer i, Integer j, BiFunction<Integer, Integer, List<Neighbour<T>>> findNeighbour) {
         if (this.value == null) return null;
-        if (this.value instanceof Traversal traversal) {
-            Neighbour<T> neighbour = find(findNeighbour.apply(i, j), traversal); //todo dirty casting
+        if (this.value instanceof Traversal<?> traversal) {
+            Neighbour<T> neighbour = find(findNeighbour.apply(i, j), (Traversal<T>) traversal); //todo dirty casting
             if (neighbour == null) return null; // can't find
             if (neighbour.level() > 1) { // is near
                 return move(this, neighbour.path().get(0)); // move on 1 cell
