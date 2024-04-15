@@ -14,7 +14,7 @@ import java.util.concurrent.atomic.AtomicInteger
 class FirstAvailableEnemyMoveCellTests extends Specification {
 
     @Unroll
-    def "Move tests 2d"() {
+    def "Move tests for two enemies"() {
         when:
         Board<MoveTarget> board = new BoardBordered<>(4, 4, FirstAvailableEnemyMoveCell::new)
         AtomicInteger ids = new AtomicInteger(1);
@@ -39,6 +39,35 @@ class FirstAvailableEnemyMoveCellTests extends Specification {
                                                               0100
                                                               0000
                                                               0000""")
+    }
+
+
+    @Unroll
+    def "Move tests for three enemies"() {
+        when:
+        Board<MoveTarget> board = new BoardBordered<>(4, 7, FirstAvailableEnemyMoveCell::new)
+        AtomicInteger ids = new AtomicInteger(1);
+        board.update(1, 0, (current) -> current.value = new Pawn(ids.getAndIncrement()))
+        board.update(2, 6, (current) -> current.value = new Pawn(ids.getAndIncrement()))
+        then:
+        BoardTestDisplay.toString(board, render()) == trim("""0000000
+                                                              1000000
+                                                              0000002
+                                                              0000000""")
+        when:
+        board.nextCycle()
+        then:
+        BoardTestDisplay.toString(board, render()) == trim("""0100000
+                                                              0000020
+                                                              0000000
+                                                              0000000""")
+        when:
+        board.nextCycle()
+        then:
+        BoardTestDisplay.toString(board, render()) == trim("""0010200
+                                                              0000000
+                                                              0000000
+                                                              0000000""")
     }
 
     Render render() {
