@@ -22,25 +22,25 @@ class TraversalTests extends Specification {
         board.update(0, 0, (current) -> current.value = actor)
         board.update(6, 9, (current) -> current.value = "!")
         then:
-        BoardTestDisplay.toString(board, render()) == trim("""1 0 0 0 0 0 0 0 0 0
-                                                              0 0 0 0 0 0 0 0 0 0
-                                                              0 0 0 0 0 0 0 0 0 0
-                                                              0 0 0 0 0 0 0 0 0 0
-                                                              0 0 0 0 0 0 0 0 0 0
-                                                              0 0 0 0 0 0 0 0 0 0      
-                                                              0 0 0 0 0 0 0 0 0 !""")
+        trim(BoardTestDisplay.toString(board, render())) == trim("""1 ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦
+                                                                    ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦
+                                                                    ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦
+                                                                    ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦
+                                                                    ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦
+                                                                    ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦      
+                                                                    ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦ !""")
         when:
         20.times {
             board.nextCycle()
         }
         then:
-        BoardTestDisplay.toString(board, render()) == trim("""0 0 0 0 0 0 0 0 0 0
-                                                              0 0 0 0 0 0 0 0 0 0
-                                                              0 0 0 0 0 0 0 0 0 0
-                                                              0 0 0 0 0 0 0 0 0 0
-                                                              0 0 0 0 0 0 0 0 0 0
-                                                              0 0 0 0 0 0 0 0 0 0      
-                                                              0 0 0 0 0 0 0 0 0 0""")
+        trim(BoardTestDisplay.toString(board, render())) == trim(""". . . . ▦ ▦ ▦ ▦ ▦ ▦
+                                                                    ▦ ▦ ▦ ▦ . ▦ ▦ ▦ ▦ ▦
+                                                                    ▦ ▦ ▦ ▦ ▦ . ▦ ▦ ▦ ▦
+                                                                    ▦ ▦ ▦ ▦ ▦ ▦ . ▦ ▦ ▦
+                                                                    ▦ ▦ ▦ ▦ ▦ ▦ ▦ . ▦ ▦
+                                                                    ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦ 1 ▦      
+                                                                    ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦ !""")
     }
 
     Render render() {
@@ -48,10 +48,10 @@ class TraversalTests extends Specification {
             @Override
             String draw(Cell cell) {
                 if (cell.value instanceof Actor) {
-                    return cell.value.id
+                    return " " + cell.value.id
                 }
-                if (cell.value == null) return "0"
-                return cell.value.toString()
+                if (cell.value == null) return " ▦"
+                return " " + cell.value.toString()
             }
         }
     }

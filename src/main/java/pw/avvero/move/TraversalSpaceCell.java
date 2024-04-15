@@ -37,7 +37,7 @@ public class TraversalSpaceCell<T> extends Cell<T> {
         return () -> {
             if (destination.value != null) return; // acquired already
             destination.value = source.value;
-            source.value = null;
+            source.value = (T) "."; // dirty
         };
     }
 
