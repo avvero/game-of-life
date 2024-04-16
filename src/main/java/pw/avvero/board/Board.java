@@ -1,8 +1,10 @@
 package pw.avvero.board;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 public abstract class Board<T> {
@@ -11,7 +13,7 @@ public abstract class Board<T> {
     protected int y;
     protected Cell<T>[][] value;
     protected List<Claim> claims;
-    private Neighborhood<T> neighborhood;
+    private final Neighborhood<T> neighborhood;
 
     private record Claim(Runnable value) {
     }
@@ -23,8 +25,9 @@ public abstract class Board<T> {
         for (int i = 0; i < x; i++) {
             for (int j = 0; j < y; j++) {
                 Cell<T> cell = factory.get();
-                cell.x = i;
-                cell.y = j;
+                cell.x = i;        // TODO
+                cell.y = j;        // TODO
+                cell.board = this; // TODO
                 this.value[i][j] = cell;
             }
         }
@@ -42,7 +45,7 @@ public abstract class Board<T> {
         for (int i = 0; i < value.length; i++) {
             for (int j = 0; j < value[i].length; j++) {
                 Cell<T> cell = value[i][j];
-                Runnable claimValue = cell.nextState(i, j, this::neighbours);
+                Runnable claimValue = cell.nextState();
                 if (claimValue != null) {
                     claims.add(new Claim(claimValue));
                 }
@@ -57,8 +60,64 @@ public abstract class Board<T> {
         claims = new ArrayList<>();
     }
 
+    /**
+     * BFS search
+     *
+     * @param i
+     * @param j
+     * @return
+     */
     public List<Neighbour<T>> neighbours(int i, int j) {
-        return neighborhood.neighbours(this, i, j);
+        List<Neighbour<T>> result = new ArrayList<>();
+        //
+        boolean[][] visited = new boolean[value.length][value[0].length];
+        LinkedList<Object[]> tovisit = new LinkedList<>();
+        tovisit.add(new Object[]{0, i, j, new ArrayList<>()});
+        while (!tovisit.isEmpty()) {
+            Object[] target = tovisit.removeFirst();
+            int level = (Integer) target[0], ti = (Integer) target[1], tj = (Integer) target[2];
+            List<Cell<T>> path = (List<Cell<T>>) target[3];
+            //
+            if (visited[ti][tj]) continue;
+            visited[ti][tj] = true;
+            if (level > 0) {
+                result.add(new Neighbour<>(get(ti, tj), path));
+            }
+            for (int[] next : neighborhood.neighbours(this, ti, tj)) {
+                int ni = next[0], nj = next[1];
+                if (!visited[ni][nj]) {
+                    ArrayList<Cell<T>> subpath = new ArrayList<>(path);
+                    subpath.add(get(ni, nj));
+                    tovisit.add(new Object[]{level + 1, ni, nj, subpath});
+                }
+            }
+        }
+        return result;
+    }
+
+    public List<Neighbour<T>> neighbours(Cell<T> cell) {
+        return neighbours(cell.x, cell.y);
+    }
+
+    public List<Cell<T>> nearCells(Cell<T> cell) {
+        List<Cell<T>> result = new ArrayList<>();
+        for (int[] next : neighborhood.neighbours(this, cell.x, cell.y)) {
+            result.add(get(next[0], next[1]));
+        }
+        return result;
+    }
+
+    public Neighbour<T> findFirstNeighbour(Predicate<Cell<T>> predicate) {
+        Cell<T> start = get(0, 0);
+        Neighbour<T> result = predicate.test(start) ? new Neighbour<>(start, List.of()) : null;
+        for (Neighbour<T> neighbour : neighbours(0, 0)) {
+            if (predicate.test(neighbour.cell())) {
+                if (result == null || result.level() > neighbour.level()) {
+                    result = neighbour;
+                }
+            }
+        }
+        return result;
     }
 
     public abstract Cell<T> get(int i, int j);

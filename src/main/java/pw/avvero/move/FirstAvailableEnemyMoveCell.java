@@ -13,10 +13,10 @@ public class FirstAvailableEnemyMoveCell extends Cell<MoveTarget> {
     }
 
     @Override
-    public Runnable nextState(Integer i, Integer j, BiFunction<Integer, Integer, List<Neighbour<MoveTarget>>> findNeighbour) {
+    public Runnable nextState() {
         if (this.value == null) return null;
 
-        Neighbour<MoveTarget> enemy = findClosesEnemy(findNeighbour.apply(i, j));
+        Neighbour<MoveTarget> enemy = findClosesEnemy(board.neighbours(this));
         if (enemy == null) return null;
         if (enemy.level() > 1) {
             return () -> new FirstWin().accept(this, enemy.path().get(0));

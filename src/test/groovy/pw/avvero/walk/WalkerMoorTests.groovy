@@ -18,7 +18,7 @@ class WalkerMoorTests extends Specification {
         when:
         Board<Object> board = new BoardBordered<>(7, 10, new MoorNeighborhood<>(), WalkableCell::new)
         AtomicInteger ids = new AtomicInteger(1)
-        def actor = new Actor(ids.getAndIncrement(), (c) -> c == "!")
+        def actor = new Hound(ids.getAndIncrement(), (c) -> c == "!")
         board.update(0, 0, (current) -> current.value = actor)
         board.update(6, 9, (current) -> current.value = "!")
         then:
@@ -34,13 +34,13 @@ class WalkerMoorTests extends Specification {
             board.nextCycle()
         }
         then:
-        trim(BoardTestDisplay.toString(board, render())) == trim(""". . . . ▦ ▦ ▦ ▦ ▦ ▦
+        trim(BoardTestDisplay.toString(board, render())) == trim(""". ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦
+                                                                    ▦ . ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦
+                                                                    ▦ ▦ . ▦ ▦ ▦ ▦ ▦ ▦ ▦
+                                                                    ▦ ▦ ▦ . ▦ ▦ ▦ ▦ ▦ ▦
                                                                     ▦ ▦ ▦ ▦ . ▦ ▦ ▦ ▦ ▦
-                                                                    ▦ ▦ ▦ ▦ ▦ . ▦ ▦ ▦ ▦
-                                                                    ▦ ▦ ▦ ▦ ▦ ▦ . ▦ ▦ ▦
-                                                                    ▦ ▦ ▦ ▦ ▦ ▦ ▦ . ▦ ▦
-                                                                    ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦ 1 ▦      
-                                                                    ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦ !""")
+                                                                    ▦ ▦ ▦ ▦ ▦ . ▦ ▦ ▦ ▦     
+                                                                    ▦ ▦ ▦ ▦ ▦ ▦ . . 1 !""")
     }
 
     @Unroll
@@ -50,8 +50,8 @@ class WalkerMoorTests extends Specification {
         AtomicInteger ids = new AtomicInteger(1)
         def id1 = ids.getAndIncrement()
         def id2 = ids.getAndIncrement()
-        def actor1 = new Actor(id1, (c) -> c.class == Actor && c.id == id2)
-        def actor2 = new Actor(id2, (c) -> c.class == Actor && c.id == id1)
+        def actor1 = new Hound(id1, (c) -> c.class == Hound && c.id == id2)
+        def actor2 = new Hound(id2, (c) -> c.class == Hound && c.id == id1)
         board.update(3, 0, (current) -> current.value = actor1)
         board.update(4, 9, (current) -> current.value = actor2)
         then:
@@ -67,11 +67,11 @@ class WalkerMoorTests extends Specification {
             board.nextCycle()
         }
         then:
-        trim(BoardTestDisplay.toString(board, render())) == trim("""▦ ▦ ▦ . 1 2 ▦ ▦ ▦ ▦
-                                                                    ▦ ▦ . ▦ ▦ ▦ . ▦ ▦ ▦
-                                                                    ▦ . ▦ ▦ ▦ ▦ ▦ . ▦ ▦
-                                                                    . ▦ ▦ ▦ ▦ ▦ ▦ ▦ . ▦ 
-                                                                    ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦ .
+        trim(BoardTestDisplay.toString(board, render())) == trim("""▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦      
+                                                                    ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦      
+                                                                    ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦      
+                                                                    . ▦ . ▦ 1 ▦ . ▦ . ▦
+                                                                    ▦ . ▦ . ▦ 2 ▦ . ▦ .
                                                                     ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦      
                                                                     ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦""")
     }
@@ -81,7 +81,7 @@ class WalkerMoorTests extends Specification {
         return new Render<Cell>() {
             @Override
             String draw(Cell cell) {
-                if (cell.value instanceof Actor) {
+                if (cell.value instanceof Hound) {
                     return " " + cell.value.id
                 }
                 if (cell.value instanceof FootPrint) {

@@ -1,19 +1,17 @@
-package pw.avvero.walk;
-
-import pw.avvero.board.Cell;
+package pw.avvero.board;
 
 import java.util.*;
-import java.util.function.BiFunction;
+import java.util.function.Function;
 
 public class AStarSearch<T> {
 
-    private Heuristic<T> heuristic;
+    private final Heuristic<T> heuristic;
 
     public AStarSearch(Heuristic<T> heuristic) {
         this.heuristic = heuristic;
     }
 
-    public List<Cell<T>> path(Cell<T> from, Cell<T> to, BiFunction<Integer, Integer, List<Cell<T>>> getNeighbors) {
+    public List<Cell<T>> path(Cell<T> from, Cell<T> to, Function<Cell<T>, List<Cell<T>>> getNeighbors) {
         // Priority queue to manage exploration based on f-cost
         PriorityQueue<AStarNode<T>> openSet = new PriorityQueue<>(Comparator.comparingInt(n -> n.fCost));
         Map<Cell<T>, Integer> gScore = new HashMap<>(); // Cost from start to a node
@@ -29,7 +27,7 @@ public class AStarSearch<T> {
             }
 
             // Explore neighbors
-            List<Cell<T>> neighbors = getNeighbors.apply(current.cell.x, current.cell.y);
+            List<Cell<T>> neighbors = getNeighbors.apply(current.cell);
             for (Cell<T> neighbor : neighbors) {
                 int tentativeGScore = gScore.get(current.cell) + 1; // Assumes uniform cost. Adjust as needed.
                 if (tentativeGScore < gScore.getOrDefault(neighbor, Integer.MAX_VALUE)) {
@@ -80,7 +78,7 @@ public class AStarSearch<T> {
     public static class ManhattanDistance<T> implements Heuristic<T> {
         @Override
         public int estimate(Cell<T> from, Cell<T> to) {
-            return Math.abs(from.x - to.x) + Math.abs(from.y - to.y);
+            return Math.abs(from.getX() - to.getX()) + Math.abs(from.getY() - to.getY());
         }
     }
 }

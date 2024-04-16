@@ -41,6 +41,6 @@ public class SearchPathBFS<T> implements SearchPath<T> {
                 }
             }
         }
-        return result;
+        return null;
     }
 }

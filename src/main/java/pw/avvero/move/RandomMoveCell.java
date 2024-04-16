@@ -5,7 +5,6 @@ import pw.avvero.board.Neighbour;
 
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.function.BiFunction;
 
 public class RandomMoveCell extends Cell<MoveTarget> {
 
@@ -14,10 +13,10 @@ public class RandomMoveCell extends Cell<MoveTarget> {
     }
 
     @Override
-    public Runnable nextState(Integer i, Integer j, BiFunction<Integer, Integer, List<Neighbour<MoveTarget>>> findNeighbour) {
+    public Runnable nextState() {
         if (this.value == null) return null;
 
-        List<Cell<MoveTarget>> fields = findNeighbour.apply(i, j).stream()
+        List<Cell<MoveTarget>> fields = board.neighbours(this).stream()
                 .filter(neighbour -> neighbour.level() == 1 && neighbour.cell().value == null)
                 .map(Neighbour::cell)
                 .toList();

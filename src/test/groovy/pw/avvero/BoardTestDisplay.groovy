@@ -19,4 +19,7 @@ class BoardTestDisplay {
         return sb.toString();
     }
 
+    static def trim(String string) {
+        return string.replace(" ", "")
+    }
 }
