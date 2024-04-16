@@ -22,7 +22,10 @@ public abstract class Board<T> {
         this.value = new Cell[x][y];
         for (int i = 0; i < x; i++) {
             for (int j = 0; j < y; j++) {
-                this.value[i][j] = factory.get();
+                Cell<T> cell = factory.get();
+                cell.x = i;
+                cell.y = j;
+                this.value[i][j] = cell;
             }
         }
         this.claims = new ArrayList<>(value.length * value[0].length);

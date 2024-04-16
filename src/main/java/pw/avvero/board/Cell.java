@@ -9,6 +9,8 @@ public abstract class Cell<T> {
     private final static AtomicInteger ids = new AtomicInteger();
     public final int id = ids.getAndIncrement();
     public T value;
+    public int x;
+    public int y;
 
     public Cell(T value) {
         this.value = value;

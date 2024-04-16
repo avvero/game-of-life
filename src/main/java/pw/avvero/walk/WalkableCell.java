@@ -30,7 +30,10 @@ public class WalkableCell<T> extends Cell<T> {
         Neighbour<T> neighbour = find(findNeighbour.apply(i, j), walker);
         if (neighbour == null) return null; // can't find
         if (neighbour.level() > 1) { // is far
-            return move(this, neighbour.path().get(0)); // move on 1 cell
+            List<Cell<T>> path = new AStarSearch<T>(new AStarSearch.ManhattanDistance<T>()).path(this, neighbour.cell(),
+                    (i1, j1) -> findNeighbour.apply(i1, j1).stream().filter(n -> n.level() == 1).map(Neighbour::cell).toList());
+
+            return move(this, path.get(1)); // move on 1 cell
         } else {
             return null;
         }
