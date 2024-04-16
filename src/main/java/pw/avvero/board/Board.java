@@ -107,7 +107,7 @@ public abstract class Board<T> {
         return result;
     }
 
-    public Neighbour<T> findFirstNeighbour(Predicate<Cell<T>> predicate) {
+    public Cell<T> findFirst(Predicate<Cell<T>> predicate) {
         Cell<T> start = get(0, 0);
         Neighbour<T> result = predicate.test(start) ? new Neighbour<>(start, List.of()) : null;
         for (Neighbour<T> neighbour : neighbours(0, 0)) {
@@ -117,7 +117,7 @@ public abstract class Board<T> {
                 }
             }
         }
-        return result;
+        return result != null ? result.cell() : null;
     }
 
     public abstract Cell<T> get(int i, int j);

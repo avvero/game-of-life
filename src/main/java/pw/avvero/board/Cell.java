@@ -6,7 +6,7 @@ public abstract class Cell<T> {
 
     private final static AtomicInteger ids = new AtomicInteger();
     public final int id = ids.getAndIncrement();
-    public T value;
+    public T value; // todo check access, maybe we should create method to check it's empty
     protected Board<T> board;
     int x;
     int y;

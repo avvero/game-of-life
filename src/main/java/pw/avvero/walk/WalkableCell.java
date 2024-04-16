@@ -6,6 +6,7 @@ import pw.avvero.board.Neighbour;
 
 import java.util.List;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 public class WalkableCell<T> extends Cell<T> {
 
@@ -20,6 +21,10 @@ public class WalkableCell<T> extends Cell<T> {
     public interface Walkable {
     }
 
+    public interface Factory<T> extends Supplier<T> {
+
+    }
+
     public WalkableCell(T value) {
         super(value);
     }
@@ -27,17 +32,27 @@ public class WalkableCell<T> extends Cell<T> {
     @Override
     public Runnable nextState() {
         if (this.value == null) return null;
-        if (!(this.value instanceof Walker)) return null;
-        //
-        WalkableCell.Walker<T> walker = (Walker<T>) this.value; //todo dirty casting
-        Neighbour<T> target = board.findFirstNeighbour(walker::isTarget);
-        if (target == null) return null; // can't find
-        if (target.level() > 1) { // is far
-            List<Cell<T>> path = SEARCH.path(this, target.cell(), (Function<Cell, List<Cell>>) cell -> board.nearCells(cell));
+        if (this.value instanceof Walker) {
+            var walker = (Walker<T>) this.value; //todo dirty casting
+            Cell<T> target = board.findFirst(walker::isTarget);
+            if (target == null) return null; // can't find
+            List<Cell<T>> path = SEARCH.path(this, target, (Function<Cell, List<Cell>>) cell -> board.nearCells(cell));
             return move(this, path.get(1)); // move on 1 cell
-        } else {
-            return null;
         }
+        if (this.value instanceof Factory) {
+            var factory =  (Factory<T>) this.value; //todo dirty casting
+            Cell<T> nearestEmptyCell = board.nearCells(this).stream().filter(this::isAvailable).findFirst().orElse(null);
+            if (nearestEmptyCell == null) return null;      // no empty cell to create unit
+            return () -> {
+                if (!isAvailable(nearestEmptyCell)) return; // no empty cell to create unit
+                nearestEmptyCell.value = factory.get();
+            };
+        }
+        return null;
+    }
+
+    private boolean isAvailable(Cell<T> cell) {
+        return cell.value == null; // todo check access, maybe we should create method to check it's empty
     }
 
     private Runnable move(Cell<T> source, Cell<T> destination) {

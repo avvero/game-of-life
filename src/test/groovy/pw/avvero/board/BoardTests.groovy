@@ -32,15 +32,15 @@ class BoardTests extends Specification {
                                                                     ▦ ▦ ▦ ! ▦ ▦ ▦ ▦ ▦ ▦      
                                                                     ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦ ?""")
         and:
-        board.findFirstNeighbour(c -> c.value == null).cell.x == 0
-        board.findFirstNeighbour(c -> c.value == null).cell.y == 0
-        board.findFirstNeighbour(c -> c.value == actor).cell.x == 3
-        board.findFirstNeighbour(c -> c.value == actor).cell.y == 7
-        board.findFirstNeighbour(c -> c.value == "!").cell.x == 5
-        board.findFirstNeighbour(c -> c.value == "!").cell.y == 3
-        board.findFirstNeighbour(c -> c.value == "?").cell.x == 6
-        board.findFirstNeighbour(c -> c.value == "?").cell.y == 9
-        board.findFirstNeighbour(c -> c.value == "@") == null
+        board.findFirst(c -> c.value == null).x == 0
+        board.findFirst(c -> c.value == null).y == 0
+        board.findFirst(c -> c.value == actor).x == 3
+        board.findFirst(c -> c.value == actor).y == 7
+        board.findFirst(c -> c.value == "!").x == 5
+        board.findFirst(c -> c.value == "!").y == 3
+        board.findFirst(c -> c.value == "?").x == 6
+        board.findFirst(c -> c.value == "?").y == 9
+        board.findFirst(c -> c.value == "@") == null
     }
 
     Render render() {
