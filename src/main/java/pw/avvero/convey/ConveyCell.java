@@ -1,5 +1,6 @@
 package pw.avvero.convey;
 
+import pw.avvero.board.Board;
 import pw.avvero.board.Cell;
 
 import java.util.concurrent.ThreadLocalRandom;

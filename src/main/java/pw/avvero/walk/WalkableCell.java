@@ -2,6 +2,7 @@ package pw.avvero.walk;
 
 import pw.avvero.board.AStarSearch;
 import pw.avvero.board.AStarSearch.ManhattanDistance;
+import pw.avvero.board.Board;
 import pw.avvero.board.Cell;
 
 import java.util.List;

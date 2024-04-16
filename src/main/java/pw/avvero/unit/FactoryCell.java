@@ -1,5 +1,6 @@
 package pw.avvero.unit;
 
+import pw.avvero.board.Board;
 import pw.avvero.board.Cell;
 
 import java.util.function.Supplier;
