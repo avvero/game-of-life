@@ -12,7 +12,7 @@ public class ConveyCell extends Cell<Integer> {
 
     @Override
     public Runnable nextState() {
-        int n = board.neighbours(this).stream().filter(neighbour -> neighbour.cell().value == 1).toList().size();
+        long n = board.nearCells(this).stream().filter((c) -> c.value == 1).count();
         if (value != 0 && (n == 2 || n == 3)) {
             return null;
         } else if (n == 3) {

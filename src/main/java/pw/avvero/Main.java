@@ -1,11 +1,13 @@
 package pw.avvero;
 
-import pw.avvero.board.Board;
-import pw.avvero.board.BoardBordered;
-import pw.avvero.board.Cell;
+import pw.avvero.board.*;
 import pw.avvero.convey.ConveyCell;
-import pw.avvero.move.*;
+import pw.avvero.move.FirstAvailableEnemyMoveCell;
+import pw.avvero.move.MoveTarget;
+import pw.avvero.move.Pawn;
+import pw.avvero.move.RandomMoveCell;
 
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicInteger;
 
 
@@ -14,7 +16,7 @@ public class Main {
         if (args.length < 3) {
 //            System.out.println("Usage: java GameOfLife <x> <y>");
 //            System.exit(1);
-            args = new String[]{"5", "5", "randmove"};
+            args = new String[]{"10", "10", "life"};
         }
         int x = Integer.parseInt(args[0]);
         int y = Integer.parseInt(args[1]);
@@ -57,7 +59,12 @@ public class Main {
                 break;
             }
             default: {
-                Board<Integer> board = new BoardBordered<>(x, y, ConveyCell::new);
+                Board<Integer> board = new BoardBordered<>(x, y, new MoorNeighborhood<>(), ConveyCell::new);
+                for (int i = 0; i < board.value().length; i++) {
+                    for (int j = 0; j < board.value()[i].length; j++) {
+                        board.update(i, j, cell -> cell.value = ThreadLocalRandom.current().nextBoolean() ? 1 : 0);
+                    }
+                }
                 // ■ ◼ ⬛ ■ ▦ ⬛ ⛶ ⬜
                 Render<Cell<Integer>> render = cell -> cell.value == 1 ? "\033[31m⬜\033[0m" : "  ";
                 new Engine<Integer>().run(board, render, 200);
