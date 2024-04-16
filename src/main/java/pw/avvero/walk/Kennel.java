@@ -13,6 +13,7 @@ public class Kennel<T> implements WalkableCell.Factory<Hound<T>> {
 
     @Override
     public Hound<T> get() {
-        return !hounds.isEmpty() ? hounds.removeFirst() : null;
+        if (hounds.isEmpty()) return null;
+        return hounds.removeFirst();
     }
 }

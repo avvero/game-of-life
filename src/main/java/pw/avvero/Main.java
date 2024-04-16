@@ -1,11 +1,14 @@
 package pw.avvero;
 
-import pw.avvero.board.*;
+import pw.avvero.board.Board;
+import pw.avvero.board.BoardBordered;
+import pw.avvero.board.Cell;
+import pw.avvero.board.MoorNeighborhood;
 import pw.avvero.convey.ConveyCell;
-import pw.avvero.move.FirstAvailableEnemyMoveCell;
-import pw.avvero.move.MoveTarget;
-import pw.avvero.move.Pawn;
-import pw.avvero.move.RandomMoveCell;
+import pw.avvero.walk.FootPrint;
+import pw.avvero.walk.Hound;
+import pw.avvero.walk.Kennel;
+import pw.avvero.walk.WalkableCell;
 
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -16,46 +19,78 @@ public class Main {
         if (args.length < 3) {
 //            System.out.println("Usage: java GameOfLife <x> <y>");
 //            System.exit(1);
-            args = new String[]{"10", "10", "life"};
+            args = new String[]{"39", "39", "hounds"};
         }
         int x = Integer.parseInt(args[0]);
         int y = Integer.parseInt(args[1]);
         String mode = args[2];
         //
         switch (mode) {
-            case "enemy": {
-                Board<MoveTarget> board = new BoardBordered<>(x, y, () -> new FirstAvailableEnemyMoveCell(null));
-                AtomicInteger ids = new AtomicInteger(1);
-                board.update(0, 0, (current) -> current.value = new Pawn(ids.getAndIncrement()));
-                board.update(0, y - 1, (current) -> current.value = new Pawn(ids.getAndIncrement()));
-                board.update(x - 1, 5, (current) -> current.value = new Pawn(ids.getAndIncrement()));
-                board.update(x - 1, y - 1, (current) -> current.value = new Pawn(ids.getAndIncrement()));
-                // ■ ◼ ⬛ ■ ▦ ⬛ ⛶ ⬜
-                Render<Cell<MoveTarget>> render = cell -> {
-                    if (cell.value instanceof Pawn) {
-                        return "\033[31m " + ((Pawn) cell.value).id + "\033[0m";
+            case "hounds": {
+                Board<Object> board = new BoardBordered<>(x, y, new MoorNeighborhood<>(), () -> new WalkableCell<>(null));
+                AtomicInteger hids = new AtomicInteger(1);
+                board.update(1, 1, (current) -> current.value = "~");
+                board.update(x - 1, 0, (current) -> current.value = "~");
+                board.update(0, y - 1, (current) -> current.value = "~");
+                board.update(x - 1, y - 1, (current) -> current.value = new Kennel<>(
+                        new Hound<>(hids.getAndIncrement(), (c) -> c == "~"),
+                        new Hound<>(hids.getAndIncrement(), (c) -> c == "~"),
+                        new Hound<>(hids.getAndIncrement(), (c) -> c == "~"),
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        new Hound<>(hids.getAndIncrement(), (c) -> c == "~"),
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        new Hound<>(hids.getAndIncrement(), (c) -> c == "~")
+                ));
+                Render<Cell<Object>> render = cell -> {
+                    if (cell.value instanceof Kennel) {
+                        return "\033[31m ^\033[0m";
+                    }
+                    if (cell.value instanceof Hound) {
+                        return " " + ((Hound) cell.value).id;
+                    }
+                    if (cell.value instanceof FootPrint) {
+                        return " .";
+                    }
+                    if (cell.value != null) {
+                        return " " + cell.value;
                     }
                     return "  ";
-//                    return (cell.id < 10 ? " " : "") + cell.id;
                 };
-                new Engine<MoveTarget>().run(board, render, 200);
-                break;
-            }
-            case "randmove": {
-                Board<MoveTarget> board = new BoardBordered<>(x, y, () -> new RandomMoveCell(null));
-                AtomicInteger ids = new AtomicInteger(1);
-                for (int i = 0; i < x; i++) {
-                    board.update(i, y / 2, (current) -> current.value = new Pawn(ids.getAndIncrement()));
-                }
-                // ■ ◼ ⬛ ■ ▦ ⬛ ⛶ ⬜
-                Render<Cell<MoveTarget>> render = cell -> {
-                    if (cell.value instanceof Pawn) {
-                        return "\033[31m " + ((Pawn) cell.value).id + "\033[0m";
-                    }
-                    return "  ";
-//                    return (cell.id < 10 ? " " : "") + cell.id;
-                };
-                new Engine<MoveTarget>().run(board, render, 200);
+                new Engine<Object>().run(board, render, 200);
                 break;
             }
             default: {

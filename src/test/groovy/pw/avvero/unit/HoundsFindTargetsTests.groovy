@@ -6,6 +6,7 @@ import pw.avvero.board.Board
 import pw.avvero.board.BoardBordered
 import pw.avvero.board.Cell
 import pw.avvero.board.MoorNeighborhood
+import pw.avvero.board.VonNeumannNeighborhood
 import pw.avvero.walk.FootPrint
 import pw.avvero.walk.Hound
 import pw.avvero.walk.Kennel
@@ -15,7 +16,7 @@ import spock.lang.Unroll
 
 import java.util.concurrent.atomic.AtomicInteger
 
-class UnitTests extends Specification {
+class HoundsFindTargetsTests extends Specification {
 
     @Unroll
     def "Move on MoorNeighborhood 1"() {
@@ -43,7 +44,7 @@ class UnitTests extends Specification {
         then:
         trim(BoardTestDisplay.toString(board, render())) == trim("""3 ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦
                                                                     ▦ 1 ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦
-                                                                    ▦ ▦ . . ▦ ▦ ▦ ▦ ▦ ▦
+                                                                    ▦ ▦ . ▦ ▦ ▦ ▦ ▦ ▦ ▦
                                                                     ▦ ▦ ▦ ^ . ▦ ▦ ▦ ▦ ▦
                                                                     ▦ ▦ ▦ ▦ ▦ . ▦ ▦ ▦ ▦ 
                                                                     ▦ ▦ ▦ ▦ ▦ ▦ . ▦ ▦ ▦     

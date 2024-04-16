@@ -95,10 +95,6 @@ public abstract class Board<T> {
         return result;
     }
 
-    public List<Neighbour<T>> neighbours(Cell<T> cell) {
-        return neighbours(cell.x, cell.y);
-    }
-
     public List<Cell<T>> nearCells(Cell<T> cell) {
         List<Cell<T>> result = new ArrayList<>();
         for (int[] next : neighborhood.neighbours(this, cell.x, cell.y)) {
