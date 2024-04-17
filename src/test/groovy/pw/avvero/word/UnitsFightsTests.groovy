@@ -26,7 +26,11 @@ class UnitsFightsTests extends Specification {
         where:
         schema                    | moves || result
         """⚔ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ⚒""" | 1     || """. ⚔ ☐ ☐ ☐ ☐ ☐ ☐ ⚒ ."""
-        """⚔ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ⚒""" | 4     || """. . . . ⚔ ⚒ . . . ."""
+        """⚔ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ⚒""" | 3     || """. . . ⚔ ☐ ☐ ⚒ . . ."""
+        """⚔ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ⚒""" | 4     || """. . . . ⚔ ⚒ . . . .""" // after last move
+        """⚔ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ⚒""" | 5     || """. . . . ⚔ ⚒ . . . .""" // after hit
+        """⚔ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ⚒""" | 6     || """. . . . ⚔ ⚒ . . . .""" // todo after hit 2?
+        """⚔ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ⚒""" | 7     || """. . . . † † . . . ."""
     }
 
     def wordFactory = new Function<Character, WordObject>() {

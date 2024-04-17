@@ -3,7 +3,6 @@ package pw.avvero.word;
 import pw.avvero.board.AStarSearch;
 import pw.avvero.board.Board;
 import pw.avvero.board.Cell;
-import pw.avvero.board.Neighbour;
 
 import java.util.List;
 import java.util.function.Predicate;
