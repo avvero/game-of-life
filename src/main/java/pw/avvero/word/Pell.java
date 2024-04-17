@@ -1,38 +1,13 @@
 package pw.avvero.word;
 
-import pw.avvero.board.Board;
-import pw.avvero.board.Cell;
-
-public class Pell extends WordObject implements Damageable, Mortal {
-
-    private int health;
+public class Pell extends DamageableUnit implements Mortal {
 
     public Pell(int health) {
-        this.health = health;
-    }
-
-    public int getHealth() {
-        return health;
+        super(health, null);
     }
 
     @Override
-    public Runnable process(Board<WordObject> board, Cell<WordObject> currentCell) {
-        // Mortal
-        if (this instanceof Mortal mortal && !mortal.alive()) {
-            return () -> {
-                currentCell.value = new Tomb();
-            };
-        }
-        return null;
-    }
-
-    @Override
-    public void dealDamage(int amount) {
-        health -= amount;
-    }
-
-    @Override
-    public boolean alive() {
-        return health > 0;
+    public WordObject remains() {
+        return new Tomb();
     }
 }

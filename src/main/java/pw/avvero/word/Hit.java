@@ -17,7 +17,7 @@ public class Hit implements Action {
     public void run() {
         if (source.value == null || destination.value == null) return;
         if (destination.value instanceof Damageable damageable) {
-            damageable.dealDamage(hitValue);
+            damageable.handleDamage(hitValue);
         }
     }
 }

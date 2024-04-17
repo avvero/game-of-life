@@ -15,8 +15,13 @@ public class Move implements Action {
     @Override
     public void run() {
         if (!isWalkable(destination)) return; // acquired already
-        destination.value = source.value;
-        source.value = new FootPrint();
+        if (source.value instanceof Movable movable) {
+            destination.value = source.value;
+            source.value = movable.footprints();
+        } else {
+            destination.value = source.value;
+            source.value = null;
+        }
     }
 
     public static boolean isWalkable(Cell<WordObject> candidate) {

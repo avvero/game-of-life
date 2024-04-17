@@ -112,7 +112,7 @@ class UnitFindTargetTests extends Specification {
         @Override
         WordObject apply(Character ch) {
             switch (ch) {
-                case '♟': return new Unit((cell) -> cell.value instanceof Point && cell.value.label == "!")
+                case '♟': return new Pawn((cell) -> cell.value instanceof Point && cell.value.label == "!")
                 case '!': return new Point("!")
                 case '●': return new Stone()
                 default: return null;
@@ -124,7 +124,7 @@ class UnitFindTargetTests extends Specification {
         return new Render<Cell>() {
             @Override
             String draw(Cell cell) {
-                if (cell.value instanceof Unit) {
+                if (cell.value instanceof Pawn) {
                     return " ♟"
                 }
                 if (cell.value instanceof Point) {

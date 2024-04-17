@@ -4,4 +4,6 @@ public interface Mortal {
 
     boolean alive();
 
+    WordObject remains();
+
 }

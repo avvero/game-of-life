@@ -11,7 +11,7 @@ public class AlignedUnit extends Unit {
         return cell -> cell.value instanceof AlignedUnit alignedUnit && !Objects.equals(alignedUnit.allegiance, selfAllegiance);
     }
 
-    private final String allegiance;
+    protected final String allegiance;
 
     public String getAllegiance() {
         return allegiance;
