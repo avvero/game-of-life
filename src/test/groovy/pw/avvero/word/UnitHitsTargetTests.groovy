@@ -41,7 +41,7 @@ class UnitHitsTargetTests extends Specification {
         @Override
         WordObject apply(Character ch) {
             switch (ch) {
-                case '⚔': return new Knight(1, (cell) -> cell.value instanceof Pell)
+                case '⚔': return new Knight(1, "red", (cell) -> cell.value instanceof Pell)
                 case '!': return new Point("!")
                 case '●': return new Stone()
                 case '9': return new Pell(9)

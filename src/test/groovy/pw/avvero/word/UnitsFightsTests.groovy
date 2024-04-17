@@ -29,7 +29,7 @@ class UnitsFightsTests extends Specification {
         """⚔ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ⚒""" | 3     || """. . . ⚔ ☐ ☐ ⚒ . . ."""
         """⚔ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ⚒""" | 4     || """. . . . ⚔ ⚒ . . . .""" // after last move
         """⚔ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ⚒""" | 5     || """. . . . ⚔ ⚒ . . . .""" // after hit
-        """⚔ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ⚒""" | 6     || """. . . . ⚔ ⚒ . . . .""" // todo after hit 2?
+        """⚔ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ⚒""" | 6     || """. . . . † † . . . ."""
         """⚔ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ⚒""" | 7     || """. . . . † † . . . ."""
     }
 
@@ -37,8 +37,8 @@ class UnitsFightsTests extends Specification {
         @Override
         WordObject apply(Character ch) {
             switch (ch) {
-                case '⚔': return new AlignedUnit("1", AlignedUnit.findEnemyAndFight("1"))
-                case '⚒': return new AlignedUnit("2", AlignedUnit.findEnemyAndFight("2"))
+                case '⚔': return new Knight(1, "red", Aligned.findEnemyAndFight("red"))
+                case '⚒': return new Knight(1, "green", Aligned.findEnemyAndFight("green"))
                 default: return null;
             }
         }
@@ -48,10 +48,10 @@ class UnitsFightsTests extends Specification {
         return new Render<Cell>() {
             @Override
             String draw(Cell cell) {
-                if (cell.value instanceof AlignedUnit && cell.value.allegiance == "1") {
+                if (cell.value instanceof Knight && cell.value.allegiance == "red") {
                     return " ⚔"
                 }
-                if (cell.value instanceof AlignedUnit && cell.value.allegiance == "2") {
+                if (cell.value instanceof Knight && cell.value.allegiance == "green") {
                     return " ⚒"
                 }
                 if (cell.value instanceof FootPrint) {

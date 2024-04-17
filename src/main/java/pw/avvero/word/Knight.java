@@ -4,10 +4,13 @@ import pw.avvero.board.Cell;
 
 import java.util.function.Predicate;
 
-public class Knight extends DamageableUnit implements DamageDealer, Movable {
+public class Knight extends DamageableUnit implements DamageDealer, Movable, Aligned {
 
-    public Knight(int health, Predicate<Cell<WordObject>> order) {
+    private final String allegiance;
+
+    public Knight(int health, String allegiance, Predicate<Cell<WordObject>> order) {
         super(health, order);
+        this.allegiance = allegiance;
     }
 
     @Override
@@ -23,5 +26,10 @@ public class Knight extends DamageableUnit implements DamageDealer, Movable {
     @Override
     public WordObject remains() {
         return new Tomb();
+    }
+
+    @Override
+    public String getAllegiance() {
+        return allegiance;
     }
 }
