@@ -103,17 +103,22 @@ public abstract class Board<T> {
         return result;
     }
 
-    public Cell<T> findFirst(Predicate<Cell<T>> predicate) {
+    public Neighbour<T> findFirstNeighbour(Predicate<Cell<T>> predicate) {
         Cell<T> start = get(0, 0);
         Neighbour<T> result = predicate.test(start) ? new Neighbour<>(start, List.of()) : null;
         for (Neighbour<T> neighbour : neighbours(0, 0)) {
             if (predicate.test(neighbour.cell())) {
-                if (result == null || result.level() > neighbour.level()) {
+                if (result == null || result.distance() > neighbour.distance()) {
                     result = neighbour;
                 }
             }
         }
-        return result != null ? result.cell() : null;
+        return result;
+    }
+
+    public Cell<T> findFirst(Predicate<Cell<T>> predicate) {
+        Neighbour<T> neighbour = findFirstNeighbour(predicate);
+        return neighbour != null ? neighbour.cell() : null;
     }
 
     public abstract Cell<T> get(int i, int j);

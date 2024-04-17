@@ -9,7 +9,7 @@ public record Neighbour<T>(Cell<T> cell, List<Cell<T>> path) {
         return "[cell=" + cell + ", path=" + path + ']';
     }
 
-    public int level() {
+    public int distance() {
         return path.size();
     }
 }
