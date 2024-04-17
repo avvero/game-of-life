@@ -39,18 +39,18 @@ public class WalkableCell<T> extends Cell<T> {
 //            List<Cell<T>> path = search.path(this, target, cell -> board.nearCells(cell).stream().filter(c -> c.value == null || c.value instanceof Walkable).toList());
             if (path.isEmpty()) return null;
             // path.get(0) is current element
-            return move(this, path.get(1)); // move on 1 cell
-//            if (path.size() > 1) {
-//                return move(this, path.get(1)); // move on 1 cell
-//            } else {
-//                Cell<T> destination = path.get(1);
+//            return move(this, path.get(1)); // move on 1 cell
+            if (path.size() > 2) {
+                return move(this, path.get(1)); // move on 1 cell
+            } else {
+                Cell<T> destination = path.get(1);
 //                return null;
-//                // eat
-//                return () -> {
-//                    if (destination.value == null) return; // acquired already
-//                    path.get(1).value = null;
-//                };
-//            }
+                // eat
+                return () -> {
+                    if (destination.value == null) return; // acquired already
+                    path.get(1).value = null;
+                };
+            }
         }
         if (this.value instanceof Factory) {
             var factory = (Factory<T>) this.value; //todo dirty casting

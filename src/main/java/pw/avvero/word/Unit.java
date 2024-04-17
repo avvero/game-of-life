@@ -18,7 +18,8 @@ public class Unit extends WordObject {
     @Override
     public Runnable process(Board<WordObject> board, Cell<WordObject> cell) {
         if (order == null) return null;
-        Cell<WordObject> target = board.findFirst(order);
+        Cell<WordObject> target = board.findFirst(order); //todo not order but target
+        // todo return Neighbour to check the distance, what about walls?
         if (target == null) return null; // can't find
         AStarSearch<WordObject> search = new AStarSearch<>(new AStarSearch.ManhattanDistance<>());
         List<Cell<WordObject>> path = search.path(cell, target, c -> board.nearCells(c).stream()

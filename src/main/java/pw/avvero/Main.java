@@ -77,16 +77,16 @@ public class Main {
                 ));
                 Render<Cell<Object>> render = cell -> {
                     if (cell.value instanceof Kennel) {
-                        return "\033[31m ^\033[0m";
+                        return "\033[31m\uD83C\uDFE0\033[0m";
                     }
                     if (cell.value instanceof Hound) {
-                        return " " + ((Hound) cell.value).id;
+                        return "\uD83D\uDC15";
                     }
                     if (cell.value instanceof FootPrint) {
-                        return " .";
+                        return "\uD83D\uDC3E";
                     }
                     if (cell.value != null) {
-                        return " " + cell.value;
+                        return " \uD83E\uDDB4";
                     }
                     return "  ";
                 };
