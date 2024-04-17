@@ -2,94 +2,136 @@ package pw.avvero.walk
 
 import pw.avvero.BoardTestDisplay
 import pw.avvero.Render
-import pw.avvero.board.*
+import pw.avvero.board.Board
+import pw.avvero.board.Cell
+import pw.avvero.board.MoorNeighborhood
+import pw.avvero.board.VonNeumannNeighborhood
+import pw.avvero.word.*
 import spock.lang.Specification
-import spock.lang.Unroll
 
-import java.util.concurrent.atomic.AtomicInteger
+import java.util.function.Function
+
+import static pw.avvero.BoardTestDisplay.trim
 
 class WalkerVonNeumannTests extends Specification {
 
-    @Unroll
-    def "Move on VonNeumannNeighborhood 1"() {
+    def "Unit finds target"() {
         when:
-        Board<Object> board = new BoardBordered<>(7, 10, new VonNeumannNeighborhood<>(), WalkableCell::new)
-        AtomicInteger ids = new AtomicInteger(1)
-        def actor = new Hound(ids.getAndIncrement(), (c) -> c == "!")
-        board.update(0, 0, (current) -> current.value = actor)
-        board.update(6, 9, (current) -> current.value = "!")
+        Board<Object> board = WordConstructor.constructFrom(schema, new VonNeumannNeighborhood<WordObject>(), wordFactory)
         then:
-        trim(BoardTestDisplay.toString(board, render())) == trim("""1 ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦
-                                                                    ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦
-                                                                    ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦
-                                                                    ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦
-                                                                    ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦
-                                                                    ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦      
-                                                                    ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦ !""")
+        trim(BoardTestDisplay.toString(board, render())) == trim(schema)
         when:
-        19.times {
-            board.nextCycle()
-        }
+        20.times { board.nextCycle() }
         then:
-        trim(BoardTestDisplay.toString(board, render())) == trim(""". ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦
-                                                                    . . ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦
-                                                                    ▦ . . . . . . . ▦ ▦
-                                                                    ▦ ▦ ▦ ▦ ▦ ▦ ▦ . ▦ ▦
-                                                                    ▦ ▦ ▦ ▦ ▦ ▦ ▦ . ▦ ▦
-                                                                    ▦ ▦ ▦ ▦ ▦ ▦ ▦ . ▦ ▦
-                                                                    ▦ ▦ ▦ ▦ ▦ ▦ ▦ . 1 !""")
+        trim(BoardTestDisplay.toString(board, render())) == trim(result)
+        where:
+        schema = """1 ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐
+                    ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐
+                    ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐
+                    ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐
+                    ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐
+                    ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐      
+                    ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ !"""
+        result = """. ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐
+                    . . ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐
+                    ☐ . . . . . . . ☐ ☐
+                    ☐ ☐ ☐ ☐ ☐ ☐ ☐ . ☐ ☐
+                    ☐ ☐ ☐ ☐ ☐ ☐ ☐ . ☐ ☐
+                    ☐ ☐ ☐ ☐ ☐ ☐ ☐ . ☐ ☐
+                    ☐ ☐ ☐ ☐ ☐ ☐ ☐ . 1 !"""
     }
 
-    @Unroll
-    def "Move on VonNeumannNeighborhood 2"() {
+    def "Unit finds target 2"() {
         when:
-        Board<Object> board = new BoardBordered<>(7, 10, new VonNeumannNeighborhood<>(), WalkableCell::new)
-        AtomicInteger ids = new AtomicInteger(1)
-        def id1 = ids.getAndIncrement()
-        def id2 = ids.getAndIncrement()
-        def actor1 = new Hound(id1, (c) -> c.class == Hound && c.id == id2)
-        def actor2 = new Hound(id2, (c) -> c.class == Hound && c.id == id1)
-        board.update(3, 0, (current) -> current.value = actor1)
-        board.update(4, 9, (current) -> current.value = actor2)
+        Board<Object> board = WordConstructor.constructFrom(schema, new MoorNeighborhood<>(), wordFactory)
         then:
-        trim(BoardTestDisplay.toString(board, render())) == trim("""▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦
-                                                                    ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦
-                                                                    ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦
-                                                                    1 ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦ 
-                                                                    ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦ 2
-                                                                    ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦      
-                                                                    ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦""")
+        trim(BoardTestDisplay.toString(board, render())) == trim(schema)
         when:
-        19.times {
-            board.nextCycle()
+        10.times { board.nextCycle() }
+        then:
+        trim(BoardTestDisplay.toString(board, render())) == trim(result)
+        where:
+        schema = """☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐
+                    ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐
+                    ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐
+                    2 ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ 3
+                    ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐
+                    ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐      
+                    ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐"""
+        result = """☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐
+                    ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐
+                    ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐
+                    . . . . 2 3 . . . .
+                    ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐
+                    ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐      
+                    ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐"""
+    }
+
+    def "Unit finds target 3"() {
+        when:
+        Board<Object> board = WordConstructor.constructFrom(schema, new VonNeumannNeighborhood<WordObject>(), wordFactory)
+        then:
+        trim(BoardTestDisplay.toString(board, render())) == trim(schema)
+        when:
+        10.times { board.nextCycle() }
+        then:
+        trim(BoardTestDisplay.toString(board, render())) == trim(result)
+        where:
+        schema = """☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐
+                    ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐
+                    ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐
+                    2 ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐
+                    ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ 3
+                    ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐      
+                    ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐"""
+        result = """☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐
+                    ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐
+                    ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐
+                    2 ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ .
+                    . ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ 3
+                    ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐      
+                    ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐"""
+    }
+
+    def wordFactory = new Function<Character, WordObject>() {
+        @Override
+        WordObject apply(Character ch) {
+            switch (ch) {
+                case '1': return new Pawn(1, (cell) -> cell.value instanceof Point && cell.value.label == "!")
+                case '2': return new Pawn(2, (cell) -> cell.value instanceof Pawn && cell.value.value == 3)
+                case '3': return new Pawn(3, (cell) -> cell.value instanceof Pawn && cell.value.value == 2)
+                case '!': return new Point("!")
+                case '●': return new Stone()
+                default: return null;
+            }
         }
-        then:
-        trim(BoardTestDisplay.toString(board, render())) == trim("""▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦
-                                                                    ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦
-                                                                    ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦
-                                                                    . ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦ 2 
-                                                                    1 ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦ .
-                                                                    ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦      
-                                                                    ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦ ▦""")
     }
 
     Render render() {
         return new Render<Cell>() {
             @Override
             String draw(Cell cell) {
-                if (cell.value instanceof Hound) {
-                    return " " + cell.value.id
+                if (cell.value instanceof Pawn && cell.value.value == 1) {
+                    return " 1"
                 }
-                if (cell.value instanceof FootPrint) {
+                if (cell.value instanceof Pawn && cell.value.value == 2) {
+                    return " 2"
+                }
+                if (cell.value instanceof Pawn && cell.value.value == 3) {
+                    return " 3"
+                }
+                if (cell.value instanceof Point) {
+                    return " " + cell.value.label
+                }
+                if (cell.value instanceof Stone) {
+                    return " ●"
+                }
+                if (cell.value instanceof pw.avvero.word.FootPrint) {
                     return " ."
                 }
-                if (cell.value == null) return " ▦"
+                if (cell.value == null) return " ☐"
                 return " " + cell.value.toString()
             }
         }
-    }
-
-    def trim(String string) {
-        return string.replace(" ", "")
     }
 }

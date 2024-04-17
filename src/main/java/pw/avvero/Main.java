@@ -54,7 +54,7 @@ public class Main {
                 break;
             }
             case "fight": {
-                Board<WordObject> board = new BoardBordered<>(x, y, new VonNeumannNeighborhood<>(), () -> new WordCell(null));
+                Board<WordObject> board = new BoardBordered<>(x, y, new MoorNeighborhood<>(), () -> new WordCell(null));
                 for (int i = 0; i < board.value().length; i+=5) {
                     board.update(i, 0, cell -> {
                         cell.value =  new Knight(5, "red", Aligned.findEnemyAndFight("red"));
@@ -62,15 +62,18 @@ public class Main {
                 }
                 for (int i = 0; i < board.value().length; i+=5) {
                     board.update(i, board.value()[0].length - 1, cell -> {
-                        cell.value =  new Knight(5, "green", Aligned.findEnemyAndFight("green"));
+                        cell.value =  new Archer(5, "green", Aligned.findEnemyAndFight("green"));
                     });
                 }
                 Render<Cell<WordObject>> render = cell -> {
                     if (cell.value instanceof Knight knight && "red".equals(knight.getAllegiance())) {
-                        return " ⚔";
+                        return "\033[31m⚔\033[0m";
                     }
                     if (cell.value instanceof Knight knight && "green".equals(knight.getAllegiance())) {
-                        return " ⚒";
+                        return "\033[32m⚔\033[0m";
+                    }
+                    if (cell.value instanceof Archer) {
+                        return  "\033[32m↑\033[0m";
                     }
                     if (cell.value instanceof pw.avvero.word.FootPrint) {
                         return " .";

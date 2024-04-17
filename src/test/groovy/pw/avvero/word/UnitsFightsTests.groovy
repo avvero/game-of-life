@@ -31,6 +31,12 @@ class UnitsFightsTests extends Specification {
         """⚔ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ⚒""" | 5     || """. . . . ⚔ ⚒ . . . .""" // after hit
         """⚔ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ⚒""" | 6     || """. . . . † † . . . ."""
         """⚔ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ⚒""" | 7     || """. . . . † † . . . ."""
+        """⚔ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ↑""" | 1     || """. ⚔ ☐ ☐ ☐ ☐ ☐ ☐ ↑ ."""
+        """⚔ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ↑""" | 2     || """. . ⚔ ☐ ☐ ☐ ☐ ↑ . ."""
+        """⚔ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ↑""" | 3     || """. . . ⚔ ☐ ☐ ☐ ↑ . ."""
+        """⚔ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ↑""" | 4     || """. . . † ☐ ☐ ☐ ↑ . . """
+        """⚔ ☐ ● ☐ ☐ ☐ ☐ ☐ ☐ ⚒""" | 1     || """⚔ ☐ ● ☐ ☐ ☐ ☐ ☐ ☐ ⚒"""
+        """⚔ ☐ ● ☐ ☐ ☐ ☐ ☐ ☐ ↑""" | 1     || """⚔ ☐ ● ☐ ☐ ☐ ☐ ☐ ☐ ↑"""
     }
 
     def wordFactory = new Function<Character, WordObject>() {
@@ -39,6 +45,8 @@ class UnitsFightsTests extends Specification {
             switch (ch) {
                 case '⚔': return new Knight(1, "red", Aligned.findEnemyAndFight("red"))
                 case '⚒': return new Knight(1, "green", Aligned.findEnemyAndFight("green"))
+                case '↑': return new Archer(1, "green", Aligned.findEnemyAndFight("green"))
+                case '●': return new Stone()
                 default: return null;
             }
         }
@@ -54,11 +62,17 @@ class UnitsFightsTests extends Specification {
                 if (cell.value instanceof Knight && cell.value.allegiance == "green") {
                     return " ⚒"
                 }
+                if (cell.value instanceof Archer && cell.value.allegiance == "green") {
+                    return " ↑"
+                }
                 if (cell.value instanceof FootPrint) {
                     return " ."
                 }
                 if (cell.value instanceof Tomb) {
                     return " †"
+                }
+                if (cell.value instanceof Stone) {
+                    return " ●"
                 }
                 if (cell.value == null) return " ☐"
                 return " " + cell.value.toString()

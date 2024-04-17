@@ -34,7 +34,7 @@ public abstract class Unit extends WordObject {
         if (this instanceof DamageDealer damageDealer
                 && target.value instanceof Damageable
                 && damageDealer.range() >= distanceToTarget) {
-            return new Hit(currentCell, target, 1);
+            return new Hit(currentCell, target.value, 1);
         }
         // Movable
         if (this instanceof Movable && path.size() > 2) {
