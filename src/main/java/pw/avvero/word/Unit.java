@@ -25,12 +25,19 @@ public class Unit extends WordObject {
         List<Cell<WordObject>> path = search.path(cell, target, c -> board.nearCells(c).stream()
                 .filter(candidate -> candidate.equals(target) || isWalkable(candidate)).toList()); //todo maybe move to nearCells?
         if (path.isEmpty()) return null; // can't find
-        return move(cell, path.get(1)); // move on 1 cell
-        // find target
-        // move
-        // hit if hittable
+        // path[0] - current object
+        // path[last] - target object
+        if (path.size() > 2) {
+            return move(cell, path.get(1)); // move on 1 cell
+        }
+        // we are near
+        if (target.value instanceof Damageable damageable) {
+            damageable.dealDamage(1); //todo
+        }
+        return null;
     }
 
+    // todo should be part of cell?
     private boolean isWalkable(Cell<WordObject> candidate) {
         return candidate.value == null || candidate.value instanceof Walkable;
     }
