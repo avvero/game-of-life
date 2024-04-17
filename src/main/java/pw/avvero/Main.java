@@ -1,14 +1,12 @@
 package pw.avvero;
 
-import pw.avvero.board.Board;
-import pw.avvero.board.BoardBordered;
-import pw.avvero.board.Cell;
-import pw.avvero.board.MoorNeighborhood;
+import pw.avvero.board.*;
 import pw.avvero.convey.ConveyCell;
 import pw.avvero.walk.FootPrint;
 import pw.avvero.walk.Hound;
 import pw.avvero.walk.Kennel;
 import pw.avvero.walk.WalkableCell;
+import pw.avvero.word.*;
 
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -35,44 +33,6 @@ public class Main {
                 board.update(x - 1, y - 1, (current) -> current.value = new Kennel<>(
                         new Hound<>(hids.getAndIncrement(), (c) -> c == "~"),
                         new Hound<>(hids.getAndIncrement(), (c) -> c == "~"),
-                        new Hound<>(hids.getAndIncrement(), (c) -> c == "~"),
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        new Hound<>(hids.getAndIncrement(), (c) -> c == "~"),
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
                         new Hound<>(hids.getAndIncrement(), (c) -> c == "~")
                 ));
                 Render<Cell<Object>> render = cell -> {
@@ -91,6 +51,37 @@ public class Main {
                     return "  ";
                 };
                 new Engine<Object>().run(board, render, 200);
+                break;
+            }
+            case "fight": {
+                Board<WordObject> board = new BoardBordered<>(x, y, new VonNeumannNeighborhood<>(), () -> new WordCell(null));
+                for (int i = 0; i < board.value().length; i+=5) {
+                    board.update(i, 0, cell -> {
+                        cell.value =  new Knight(5, "red", Aligned.findEnemyAndFight("red"));
+                    });
+                }
+                for (int i = 0; i < board.value().length; i+=5) {
+                    board.update(i, board.value()[0].length - 1, cell -> {
+                        cell.value =  new Knight(5, "green", Aligned.findEnemyAndFight("green"));
+                    });
+                }
+                Render<Cell<WordObject>> render = cell -> {
+                    if (cell.value instanceof Knight knight && "red".equals(knight.getAllegiance())) {
+                        return " ⚔";
+                    }
+                    if (cell.value instanceof Knight knight && "green".equals(knight.getAllegiance())) {
+                        return " ⚒";
+                    }
+                    if (cell.value instanceof pw.avvero.word.FootPrint) {
+                        return " .";
+                    }
+                    if (cell.value instanceof Tomb) {
+                        return " †";
+                    }
+                    if (cell.value == null) return "  ";
+                    return " " + cell.value;
+                };
+                new Engine<WordObject>().run(board, render, 200);
                 break;
             }
             default: {
