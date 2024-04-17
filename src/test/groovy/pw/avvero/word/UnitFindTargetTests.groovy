@@ -22,11 +22,11 @@ class UnitFindTargetTests extends Specification {
         then:
         trim(BoardTestDisplay.toString(board, render())) == trim(result)
         where:
-        schema = """U ☐ ☐ 
+        schema = """♟ ☐ ☐ 
                     ☐ ☐ ☐
                     ☐ ☐ !"""
         result = """. ☐ ☐ 
-                    ☐ U ☐
+                    ☐ ♟ ☐
                     ☐ ☐ !"""
     }
 
@@ -40,7 +40,7 @@ class UnitFindTargetTests extends Specification {
         then:
         trim(BoardTestDisplay.toString(board, render())) == trim(result)
         where:
-        schema = """U ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐
+        schema = """♟ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐
                     ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐
                     ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐
                     ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ! ☐
@@ -50,7 +50,7 @@ class UnitFindTargetTests extends Specification {
         result = """. ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐
                     ☐ . ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐
                     ☐ ☐ . ☐ ☐ ☐ ☐ ☐ ☐ ☐
-                    ☐ ☐ ☐ . . . . U ! ☐
+                    ☐ ☐ ☐ . . . . ♟ ! ☐
                     ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐
                     ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐      
                     ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐"""
@@ -66,18 +66,18 @@ class UnitFindTargetTests extends Specification {
         then:
         trim(BoardTestDisplay.toString(board, render())) == trim(result)
         where:
-        schema = """U ▴ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐
-                    ☐ ▴ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐
-                    ☐ ▴ ☐ ▴ ☐ ☐ ☐ ☐ ☐ ☐
-                    ☐ ☐ ☐ ▴ ☐ ☐ ☐ ☐ ! ☐
-                    ☐ ☐ ▴ ▴ ☐ ☐ ☐ ☐ ☐ ☐
+        schema = """♟ ● ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐
+                    ☐ ● ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐
+                    ☐ ● ☐ ● ☐ ☐ ☐ ☐ ☐ ☐
+                    ☐ ☐ ☐ ● ☐ ☐ ☐ ☐ ! ☐
+                    ☐ ☐ ● ● ☐ ☐ ☐ ☐ ☐ ☐
                     ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐      
                     ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐"""
-        result = """. ▴ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐
-                    . ▴ ☐ . ☐ ☐ ☐ ☐ ☐ ☐
-                    . ▴ . ▴ . ☐ ☐ ☐ ☐ ☐
-                    ☐ . ☐ ▴ ☐ . . U ! ☐
-                    ☐ ☐ ▴ ▴ ☐ ☐ ☐ ☐ ☐ ☐
+        result = """. ● ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐
+                    . ● ☐ . ☐ ☐ ☐ ☐ ☐ ☐
+                    . ● . ● . ☐ ☐ ☐ ☐ ☐
+                    ☐ . ☐ ● ☐ . . ♟ ! ☐
+                    ☐ ☐ ● ● ☐ ☐ ☐ ☐ ☐ ☐
                     ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐      
                     ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐"""
     }
@@ -92,17 +92,17 @@ class UnitFindTargetTests extends Specification {
         then:
         trim(BoardTestDisplay.toString(board, render())) == trim(result)
         where:
-        schema = """U ▴ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐
-                    ☐ ▴ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐
-                    ☐ ▴ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐
-                    ▴ ▴ ☐ ☐ ☐ ☐ ☐ ☐ ! ☐
+        schema = """♟ ● ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐
+                    ☐ ● ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐
+                    ☐ ● ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐
+                    ● ● ☐ ☐ ☐ ☐ ☐ ☐ ! ☐
                     ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐
                     ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐      
                     ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐"""
-        result = """U ▴ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐
-                    ☐ ▴ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐
-                    ☐ ▴ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐
-                    ▴ ▴ ☐ ☐ ☐ ☐ ☐ ☐ ! ☐
+        result = """♟ ● ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐
+                    ☐ ● ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐
+                    ☐ ● ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐
+                    ● ● ☐ ☐ ☐ ☐ ☐ ☐ ! ☐
                     ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐
                     ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐      
                     ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐"""
@@ -112,9 +112,9 @@ class UnitFindTargetTests extends Specification {
         @Override
         WordObject apply(Character ch) {
             switch (ch) {
-                case 'U': return new Unit((cell) -> cell.value instanceof Point && cell.value.label == "!")
+                case '♟': return new Unit((cell) -> cell.value instanceof Point && cell.value.label == "!")
                 case '!': return new Point("!")
-                case '▴': return new Stone()
+                case '●': return new Stone()
                 default: return null;
             }
         }
@@ -125,13 +125,13 @@ class UnitFindTargetTests extends Specification {
             @Override
             String draw(Cell cell) {
                 if (cell.value instanceof Unit) {
-                    return " U"
+                    return " ♟"
                 }
                 if (cell.value instanceof Point) {
                     return " " + cell.value.label
                 }
                 if (cell.value instanceof Stone) {
-                    return " ▴"
+                    return " ●"
                 }
                 if (cell.value instanceof FootPrint) {
                     return " ."
