@@ -17,7 +17,7 @@ public class Pell extends WordObject implements Damageable, Mortal {
 
     @Override
     public Runnable process(Board<WordObject> board, Cell<WordObject> cell) {
-        if (health < 0) {
+        if (health <= 0) {
             return () -> {
                 cell.value = new Tomb();
             };
