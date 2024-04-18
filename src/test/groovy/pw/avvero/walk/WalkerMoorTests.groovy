@@ -92,6 +92,32 @@ class WalkerMoorTests extends Specification {
                     ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐"""
     }
 
+    def "Unit finds target 4"() {
+        when:
+        Board<Object> board = WordConstructor.constructFrom(schema, new MoorNeighborhood<>(), wordFactory)
+        then:
+        trim(BoardTestDisplay.toString(board, render())) == trim(schema)
+        when:
+        10.times { board.nextCycle() }
+        then:
+        trim(BoardTestDisplay.toString(board, render())) == trim(result)
+        where:
+        schema = """1 ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ !
+                    ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐
+                    1 ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ !
+                    ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ 
+                    1 ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ !
+                    ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐      
+                    1 ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ !"""
+        result = """. . . . . . . . 1 !
+                    ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐
+                    . . . . . . . . 1 !
+                    ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ 
+                    . . . . . . . . 1 !
+                    ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐      
+                    . . . . . . . . 1 !"""
+    }
+
     def wordFactory = new Function<Character, WordObject>() {
         @Override
         WordObject apply(Character ch) {

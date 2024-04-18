@@ -9,10 +9,12 @@ import java.util.function.Predicate;
 
 public abstract class Unit extends WordObject {
 
-    private final Predicate<Cell<WordObject>> order;
+    protected final UnitStatsSchema.Stats stats;
+    protected final Predicate<Cell<WordObject>> order;
 
     public Unit(Predicate<Cell<WordObject>> order) {
         this.order = order;
+        this.stats = UnitStatsSchema.getBalance(this);
     }
 
     @Override
@@ -22,7 +24,7 @@ public abstract class Unit extends WordObject {
             return () -> currentCell.value = mortal.remains();
         }
         if (order == null) return null;  // no order
-        Cell<WordObject> target = board.findFirst(order); //todo not order but target
+        Cell<WordObject> target = board.findCloses(currentCell, order); //todo not order but target
         if (target == null) return null; // can't find
         //
         AStarSearch<WordObject> search = new AStarSearch<>(new AStarSearch.ManhattanDistance<>());

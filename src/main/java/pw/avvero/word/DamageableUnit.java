@@ -8,9 +8,9 @@ public abstract class DamageableUnit extends Unit implements Damageable, Mortal 
 
     protected int health;
 
-    public DamageableUnit(int health, Predicate<Cell<WordObject>> order) {
+    public DamageableUnit(Predicate<Cell<WordObject>> order) {
         super(order);
-        this.health = health;
+        this.health = stats.health();
     }
 
     @Override

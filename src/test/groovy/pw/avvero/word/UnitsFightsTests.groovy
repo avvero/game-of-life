@@ -24,28 +24,34 @@ class UnitsFightsTests extends Specification {
         then:
         trim(BoardTestDisplay.toString(board, render())) == trim(result)
         where:
-        schema                    | moves || result
-        """⚔ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ⚒""" | 1     || """. ⚔ ☐ ☐ ☐ ☐ ☐ ☐ ⚒ ."""
-        """⚔ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ⚒""" | 3     || """. . . ⚔ ☐ ☐ ⚒ . . ."""
-        """⚔ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ⚒""" | 4     || """. . . . ⚔ ⚒ . . . .""" // after last move
-        """⚔ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ⚒""" | 5     || """. . . . ⚔ ⚒ . . . .""" // after hit
-        """⚔ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ⚒""" | 6     || """. . . . † † . . . ."""
-        """⚔ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ⚒""" | 7     || """. . . . † † . . . ."""
-        """⚔ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ↑""" | 1     || """. ⚔ ☐ ☐ ☐ ☐ ☐ ☐ ↑ ."""
-        """⚔ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ↑""" | 2     || """. . ⚔ ☐ ☐ ☐ ☐ ↑ . ."""
-        """⚔ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ↑""" | 3     || """. . . ⚔ ☐ ☐ ☐ ↑ . ."""
-        """⚔ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ↑""" | 4     || """. . . † ☐ ☐ ☐ ↑ . . """
-        """⚔ ☐ ● ☐ ☐ ☐ ☐ ☐ ☐ ⚒""" | 1     || """⚔ ☐ ● ☐ ☐ ☐ ☐ ☐ ☐ ⚒"""
-        """⚔ ☐ ● ☐ ☐ ☐ ☐ ☐ ☐ ↑""" | 1     || """⚔ ☐ ● ☐ ☐ ☐ ☐ ☐ ☐ ↑"""
+        schema                            | moves || result
+        // knight vs knight
+        """⚔ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ⚒""" | 1     || """. ⚔ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ⚒ ."""
+        """⚔ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ⚒""" | 3     || """. . . ⚔ ☐ ☐ ☐ ☐ ☐ ☐ ⚒ . . ."""
+        """⚔ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ⚒""" | 6     || """. . . . . . ⚔ ⚒ . . . . . .""" // meet
+        """⚔ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ⚒""" | 11    || """. . . . . . ⚔ ⚒ . . . . . .""" // almost
+        """⚔ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ⚒""" | 12    || """. . . . . . † † . . . . . .""" // done
+        """⚔ ☐ ● ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ⚒""" | 12    || """⚔ ☐ ● ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ⚒""" // done
+        // knight vs archer
+        """⚔ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ↑""" | 1     || """. ⚔ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ↑ ."""
+        """⚔ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ↑""" | 2     || """. . ⚔ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ↑ . ."""
+        """⚔ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ↑""" | 3     || """. . . ⚔ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ↑ . ."""
+        """⚔ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ↑""" | 4     || """. . . . ⚔ ☐ ☐ ☐ ☐ ☐ ☐ ↑ . ."""
+        """⚔ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ↑""" | 5     || """. . . . . ⚔ ☐ ☐ ☐ ☐ ☐ ↑ . ."""
+        """⚔ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ↑""" | 6     || """. . . . . . ⚔ ☐ ☐ ☐ ☐ ↑ . ."""
+        """⚔ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ↑""" | 7     || """. . . . . . . ⚔ ☐ ☐ ☐ ↑ . ."""
+        """⚔ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ↑""" | 8     || """. . . . . . . † ☐ ☐ ☐ ↑ . ."""
+        """⚔ ☐ ● ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ⚒""" | 1     || """⚔ ☐ ● ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ⚒"""
+        """⚔ ☐ ● ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ↑""" | 1     || """⚔ ☐ ● ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ↑"""
     }
 
     def wordFactory = new Function<Character, WordObject>() {
         @Override
         WordObject apply(Character ch) {
             switch (ch) {
-                case '⚔': return new Knight(1, "red", Aligned.findEnemyAndFight("red"))
-                case '⚒': return new Knight(1, "green", Aligned.findEnemyAndFight("green"))
-                case '↑': return new Archer(1, "green", Aligned.findEnemyAndFight("green"))
+                case '⚔': return new Knight("red", Aligned.findEnemyAndFight("red"))
+                case '⚒': return new Knight("green", Aligned.findEnemyAndFight("green"))
+                case '↑': return new Archer("green", Aligned.findEnemyAndFight("green"))
                 case '●': return new Stone()
                 default: return null;
             }

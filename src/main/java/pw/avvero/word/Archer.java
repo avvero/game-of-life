@@ -9,18 +9,23 @@ public class Archer extends DamageableUnit implements DamageDealer, Movable, Ali
     private final String allegiance;
 
     public Archer(int health, String allegiance, Predicate<Cell<WordObject>> order) {
-        super(health, order);
+        this(allegiance, order);
+        this.health = health;
+    }
+
+    public Archer(String allegiance, Predicate<Cell<WordObject>> order) {
+        super(order);
         this.allegiance = allegiance;
     }
 
     @Override
     public int range() {
-        return 5;
+        return stats.range();
     }
 
     @Override
     public WordObject footprints() {
-       return new FootPrint();
+        return new FootPrint();
     }
 
     @Override

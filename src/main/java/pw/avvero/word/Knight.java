@@ -8,19 +8,25 @@ public class Knight extends DamageableUnit implements DamageDealer, Movable, Ali
 
     private final String allegiance;
 
-    public Knight(int health, String allegiance, Predicate<Cell<WordObject>> order) {
-        super(health, order);
+    public Knight(String allegiance, Predicate<Cell<WordObject>> order) {
+        super(order);
         this.allegiance = allegiance;
+    }
+
+    public Knight(int health, String allegiance, Predicate<Cell<WordObject>> order) {
+        super(order);
+        this.allegiance = allegiance;
+        this.health = health;
     }
 
     @Override
     public int range() {
-        return 1;
+        return stats.range();
     }
 
     @Override
     public WordObject footprints() {
-       return new FootPrint();
+        return new FootPrint();
     }
 
     @Override

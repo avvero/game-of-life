@@ -103,22 +103,19 @@ public abstract class Board<T> {
         return result;
     }
 
-    public Neighbour<T> findFirstNeighbour(Predicate<Cell<T>> predicate) {
-        Cell<T> start = get(0, 0);
-        Neighbour<T> result = predicate.test(start) ? new Neighbour<>(start, List.of()) : null;
-        for (Neighbour<T> neighbour : neighbours(0, 0)) {
-            if (predicate.test(neighbour.cell())) {
-                if (result == null || result.distance() > neighbour.distance()) {
-                    result = neighbour;
+    public Cell<T> findCloses(Cell<T> start, Predicate<Cell<T>> end) {
+        double closesCellDistance = Double.MAX_VALUE;
+        Neighbour<T> closesNeighbour = null;
+        for (Neighbour<T> neighbour : neighbours(start.x, start.y)) {
+            if (end.test(neighbour.cell())) {
+                double closesCellDistanceSoFar = new AStarSearch.ManhattanDistance<T>().estimate(start, neighbour.cell());
+                if ((closesNeighbour == null || closesNeighbour.distance() >= neighbour.distance()) && closesCellDistanceSoFar < closesCellDistance) {
+                    closesCellDistance = closesCellDistanceSoFar;
+                    closesNeighbour = neighbour;
                 }
             }
         }
-        return result;
-    }
-
-    public Cell<T> findFirst(Predicate<Cell<T>> predicate) {
-        Neighbour<T> neighbour = findFirstNeighbour(predicate);
-        return neighbour != null ? neighbour.cell() : null;
+        return closesNeighbour != null ? closesNeighbour.cell() : null;
     }
 
     public abstract Cell<T> get(int i, int j);
