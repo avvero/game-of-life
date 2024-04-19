@@ -17,7 +17,7 @@ class WalkerVonNeumannTests extends Specification {
 
     def "Unit finds target"() {
         when:
-        Board<Object> board = WordConstructor.constructFrom(schema, new VonNeumannNeighborhood<WordObject>(), wordFactory)
+        Board<Object> board = TestWordConstructor.constructFrom(schema, new VonNeumannNeighborhood<WordObject>(), wordFactory)
         then:
         trim(BoardTestDisplay.toString(board, render())) == trim(schema)
         when:
@@ -43,7 +43,7 @@ class WalkerVonNeumannTests extends Specification {
 
     def "Unit finds target 2"() {
         when:
-        Board<Object> board = WordConstructor.constructFrom(schema, new MoorNeighborhood<>(), wordFactory)
+        Board<Object> board = TestWordConstructor.constructFrom(schema, new MoorNeighborhood<>(), wordFactory)
         then:
         trim(BoardTestDisplay.toString(board, render())) == trim(schema)
         when:
@@ -69,7 +69,7 @@ class WalkerVonNeumannTests extends Specification {
 
     def "Unit finds target 3"() {
         when:
-        Board<Object> board = WordConstructor.constructFrom(schema, new VonNeumannNeighborhood<WordObject>(), wordFactory)
+        Board<Object> board = TestWordConstructor.constructFrom(schema, new VonNeumannNeighborhood<WordObject>(), wordFactory)
         then:
         trim(BoardTestDisplay.toString(board, render())) == trim(schema)
         when:

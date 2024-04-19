@@ -8,6 +8,7 @@ import pw.avvero.convey.ConveyCell;
 import pw.avvero.word.*;
 
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.function.BiFunction;
 
 
 public class Main {
@@ -23,20 +24,41 @@ public class Main {
         //
         switch (mode) {
             case "fight": {
-                Board<WordObject> board = new BoardBordered<>(x, y, new MoorNeighborhood<>(), () -> new WordCell(null));
-                for (int i = 0; i < board.value().length; i += 5) {
-                    board.update(i, 0, cell -> {
-                        cell.value = new Knight("red", Aligned.findEnemyAndFight("red"));
-                    });
-                    board.update(i, 1, cell -> {
-                        cell.value = new Knight("red", Aligned.findEnemyAndFight("red"));
-                    });
-                }
-                for (int i = 0; i < board.value().length; i += 5) {
-                    board.update(i, board.value()[0].length - 1, cell -> {
-                        cell.value = new Archer("green", Aligned.findEnemyAndFight("green"));
-                    });
-                }
+                String red = """
+                            ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐
+                            ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐
+                            ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐
+                            ⚔ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐
+                            ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐
+                            ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐
+                            ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐
+                        """;
+                String green = """
+                            ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐
+                            ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐
+                            ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐
+                            ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ⚔
+                            ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐
+                            ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐
+                            ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐
+                        """;
+
+                var factory = new BiFunction<String, Character, WordObject>() {
+                    @Override
+                    public WordObject apply(String army, Character ch) {
+                        switch (ch) {
+                            case '⚔':
+                                return new Knight(army, Aligned.findEnemyAndFight(army));
+                            case '↑':
+                                return new Archer(army, Aligned.findEnemyAndFight(army));
+                            case '●':
+                                return new Stone();
+                            default:
+                                return null;
+                        }
+                    }
+                };
+                Board<WordObject> board = WordConstructor.constructFrom(new MoorNeighborhood<>(), factory, red, green);
                 Render<Cell<WordObject>> render = cell -> {
                     if (cell.value instanceof Knight knight && "red".equals(knight.getAllegiance())) {
                         return "\033[31m ⚔\033[0m";
@@ -44,7 +66,10 @@ public class Main {
                     if (cell.value instanceof Knight knight && "green".equals(knight.getAllegiance())) {
                         return "\033[32m ⚔\033[0m";
                     }
-                    if (cell.value instanceof Archer) {
+                    if (cell.value instanceof Archer archer && "red".equals(archer.getAllegiance())) {
+                        return "\033[31m ↑\033[0m";
+                    }
+                    if (cell.value instanceof Archer archer && "green".equals(archer.getAllegiance())) {
                         return "\033[32m ↑\033[0m";
                     }
                     if (cell.value instanceof pw.avvero.word.FootPrint) {

@@ -14,7 +14,7 @@ class UnitFindTargetTests extends Specification {
 
     def "Unit finds target near"() {
         when:
-        Board<Object> board = WordConstructor.constructFrom(schema, wordFactory)
+        Board<Object> board = TestWordConstructor.constructFrom(schema, wordFactory)
         then:
         trim(BoardTestDisplay.toString(board, render())) == trim(schema)
         when:
@@ -32,7 +32,7 @@ class UnitFindTargetTests extends Specification {
 
     def "Unit finds target"() {
         when:
-        Board<Object> board = WordConstructor.constructFrom(schema, wordFactory)
+        Board<Object> board = TestWordConstructor.constructFrom(schema, wordFactory)
         then:
         trim(BoardTestDisplay.toString(board, render())) == trim(schema)
         when:
@@ -58,7 +58,7 @@ class UnitFindTargetTests extends Specification {
 
     def "Unit finds target in maze"() {
         when:
-        Board<Object> board = WordConstructor.constructFrom(schema, wordFactory)
+        Board<Object> board = TestWordConstructor.constructFrom(schema, wordFactory)
         then:
         trim(BoardTestDisplay.toString(board, render())) == trim(schema)
         when:
@@ -84,7 +84,7 @@ class UnitFindTargetTests extends Specification {
 
     def "Unit can't find target in maze"() {
         when:
-        Board<Object> board = WordConstructor.constructFrom(schema, wordFactory)
+        Board<Object> board = TestWordConstructor.constructFrom(schema, wordFactory)
         then:
         trim(BoardTestDisplay.toString(board, render())) == trim(schema)
         when:

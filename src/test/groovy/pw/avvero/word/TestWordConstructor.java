@@ -8,7 +8,7 @@ import pw.avvero.board.Neighborhood;
 
 import java.util.function.Function;
 
-public class WordConstructor {
+public class TestWordConstructor {
 
     public static Board<WordObject> constructFrom(String string, Neighborhood<WordObject> neighborhood,
                                                   Function<Character, WordObject> factory) {

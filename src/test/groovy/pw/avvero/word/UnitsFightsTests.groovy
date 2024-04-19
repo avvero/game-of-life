@@ -16,7 +16,7 @@ class UnitsFightsTests extends Specification {
     @Unroll
     def "Unit finds target near"() {
         when:
-        Board<Object> board = WordConstructor.constructFrom(schema, wordFactory)
+        Board<Object> board = TestWordConstructor.constructFrom(schema, wordFactory)
         then:
         trim(BoardTestDisplay.toString(board, render())) == trim(schema)
         when:
