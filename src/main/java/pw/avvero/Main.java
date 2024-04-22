@@ -7,12 +7,15 @@ import pw.avvero.board.MoorNeighborhood;
 import pw.avvero.convey.ConveyCell;
 import pw.avvero.word.*;
 
+import java.io.IOException;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.BiFunction;
 
+import static java.util.Objects.requireNonNull;
+
 
 public class Main {
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) throws InterruptedException, IOException {
         if (args.length < 3) {
 //            System.out.println("Usage: java GameOfLife <x> <y>");
 //            System.exit(1);
@@ -24,24 +27,8 @@ public class Main {
         //
         switch (mode) {
             case "fight": {
-                String red = """
-                            ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐
-                            ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐
-                            ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐
-                            ⚔ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐
-                            ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐
-                            ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐
-                            ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐
-                        """;
-                String green = """
-                            ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐
-                            ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐
-                            ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐
-                            ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ⚔
-                            ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐
-                            ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐
-                            ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐
-                        """;
+                String red = readArmySchema("red.txt");
+                String green = readArmySchema("green.txt");
 
                 var factory = new BiFunction<String, Character, WordObject>() {
                     @Override
@@ -97,5 +84,9 @@ public class Main {
                 break;
             }
         }
+    }
+
+    private static String readArmySchema(String filePath) throws IOException {
+        return new String(requireNonNull(Main.class.getClassLoader().getResourceAsStream(filePath)).readAllBytes());
     }
 }
