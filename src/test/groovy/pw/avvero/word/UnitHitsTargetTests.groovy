@@ -25,6 +25,9 @@ class UnitHitsTargetTests extends Specification {
         trim(BoardTestDisplay.toString(board, render())) == trim(result)
         where:
         schema                          | moves || result
+        """⚔ 9 ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐""" | 1     || """⚔ 8 ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐"""
+        """↑ 9 ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐""" | 1     || """↑ 8 ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐"""
+        // move
         """⚔ ☐ ☐ ☐ ☐ ☐ ☐ ☐ 9 ☐ ☐ ☐ 9""" | 6     || """. . . . . . ⚔ ☐ 9 ☐ ☐ ☐ 9"""
         """⚔ ☐ ☐ ☐ ☐ ☐ ☐ ☐ 9 ☐ ☐ ☐ 9""" | 7     || """. . . . . . . ⚔ 9 ☐ ☐ ☐ 9"""
         """⚔ ☐ ☐ ☐ ☐ ☐ ☐ ☐ 9 ☐ ☐ ☐ 9""" | 8     || """. . . . . . . ⚔ 8 ☐ ☐ ☐ 9"""
@@ -35,6 +38,16 @@ class UnitHitsTargetTests extends Specification {
         """⚔ ☐ ☐ ☐ ☐ ☐ ☐ ☐ 9 ☐ ☐ ☐ 9""" | 18    || """. . . . . . . . ⚔ ☐ ☐ ☐ 9"""
         """⚔ ☐ ☐ ☐ ☐ ☐ ☐ ☐ 9 ☐ ☐ ☐ 9""" | 19    || """. . . . . . . . . ⚔ ☐ ☐ 9"""
         """⚔ ☐ ☐ ☐ ☐ ☐ ☐ ☐ 9 ☐ ☐ ☐ 9""" | 20    || """. . . . . . . . . . ⚔ ☐ 9"""
+        //
+        """↑ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ 9""" | 6     || """. . ↑ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ 5"""
+        """↑ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ 9""" | 11    || """. . ↑ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ 0"""
+        """↑ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ 9""" | 12    || """. . ↑ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ ☐ †"""
+        // stone
+        """⚔ ☐ ☐ ☐ ☐ ☐ ● ☐ ☐ ☐ ☐ ☐ 9""" | 6     || """⚔ ☐ ☐ ☐ ☐ ☐ ● ☐ ☐ ☐ ☐ ☐ 9"""
+        """↑ ☐ ☐ ☐ ☐ ☐ ● ☐ ☐ ☐ ☐ ☐ 9""" | 6     || """. . ↑ ☐ ☐ ☐ ● ☐ ☐ ☐ ☐ ☐ 5"""
+        // wall
+        """⚔ ☐ ☐ ☐ ☐ ☐ █ ☐ ☐ ☐ ☐ ☐ 9""" | 6     || """⚔ ☐ ☐ ☐ ☐ ☐ █ ☐ ☐ ☐ ☐ ☐ 9"""
+        """↑ ☐ ☐ ☐ ☐ ☐ █ ☐ ☐ ☐ ☐ ☐ 9""" | 6     || """↑ ☐ ☐ ☐ ☐ ☐ █ ☐ ☐ ☐ ☐ ☐ 9"""
     }
 
     def wordFactory = new Function<Character, WordObject>() {
@@ -42,8 +55,10 @@ class UnitHitsTargetTests extends Specification {
         WordObject apply(Character ch) {
             switch (ch) {
                 case '⚔': return new Knight(1, "red", (cell) -> cell.value instanceof Pell)
+                case '↑': return new Archer(1, "red", (cell) -> cell.value instanceof Pell)
                 case '!': return new Point("!")
                 case '●': return new Stone()
+                case '█': return new Wall()
                 case '9': return new Pell(9)
                 case '†': return new Tomb()
                 default: return null;
@@ -58,11 +73,17 @@ class UnitHitsTargetTests extends Specification {
                 if (cell.value instanceof Knight) {
                     return " ⚔"
                 }
+                if (cell.value instanceof Archer) {
+                    return " ↑"
+                }
                 if (cell.value instanceof Point) {
                     return " " + cell.value.label
                 }
                 if (cell.value instanceof Stone) {
                     return " ●"
+                }
+                if (cell.value instanceof Wall) {
+                    return " █"
                 }
                 if (cell.value instanceof Pell) {
                     return " " + cell.value.health

@@ -10,10 +10,10 @@ import java.util.function.Predicate;
 public abstract class Unit extends WordObject {
 
     protected final UnitStatsSchema.Stats stats;
-    protected final Predicate<Cell<WordObject>> order;
+    protected final Predicate<Cell<WordObject>> target;
 
-    public Unit(Predicate<Cell<WordObject>> order) {
-        this.order = order;
+    public Unit(Predicate<Cell<WordObject>> target) {
+        this.target = target;
         this.stats = UnitStatsSchema.getBalance(this);
     }
 
@@ -23,26 +23,37 @@ public abstract class Unit extends WordObject {
         if (this instanceof Mortal mortal && !mortal.alive()) {
             return () -> currentCell.value = mortal.remains();
         }
-        if (order == null) return null;  // no order
-        Cell<WordObject> target = board.findCloses(currentCell, order); //todo not order but target
-        if (target == null) return null; // can't find
+        if (target == null) return null;     // no target
+        Cell<WordObject> targetCell = board.findCloses(currentCell, target);
+        if (targetCell == null) return null; // can't find
         //
-        AStarSearch<WordObject> search = new AStarSearch<>(new AStarSearch.ManhattanDistance<>());
-        List<Cell<WordObject>> path = search.path(currentCell, target, c -> board.nearCells(c).stream()
-                .filter(candidate -> candidate.equals(target) || Move.isWalkable(candidate)).toList()); //todo maybe move to nearCells?
-        if (path.isEmpty()) return null; // can't find
-        int distanceToTarget = path.size() - 1; //path[0] - current object, path[last] - target object
+        List<Cell<WordObject>> path = findShortestPath(board, currentCell, targetCell);
+        if (path.isEmpty()) return null;     // can't find
+        int distanceToTarget = path.size();
         //
         if (this instanceof DamageDealer damageDealer
-                && target.value instanceof Damageable
+                && targetCell.value instanceof Damageable
                 && damageDealer.range() >= distanceToTarget) {
-            return new Hit(currentCell, target.value, 1);
+            return new Hit(currentCell, targetCell.value, 1);
         }
         // Movable
-        if (this instanceof Movable && path.size() > 2) {
-            return new Move(currentCell, path.get(1)); // move on 1 cell
+        if (this instanceof Movable && path.size() > 1) {
+            return new Move(currentCell, path.get(0)); // move on 1 cell
         }
         // We are close
         return null;
+    }
+
+    private List<Cell<WordObject>> findShortestPath(Board<WordObject> board,
+                                                    Cell<WordObject> currentCell,
+                                                    Cell<WordObject> targetCell) {
+        AStarSearch<WordObject> search = new AStarSearch<>(new AStarSearch.ManhattanDistance<>());
+        List<Cell<WordObject>> path = search.path(currentCell, targetCell, c -> board.nearCells(c).stream()
+                .filter(candidate -> candidate.equals(targetCell) || Move.isWalkable(candidate)).toList()); //todo maybe move to nearCells?
+        //path[0] - current object, path[last] - target object
+        if (!path.isEmpty()) {
+            path.removeFirst();
+        }
+        return path;
     }
 }
